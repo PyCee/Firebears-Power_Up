@@ -2,13 +2,13 @@ var FORCE_DUE_TO_GRAVITY = 9.8;
 
 class Actor extends Renderable {
     constructor (position, size, animation, draw_priority=1, blocking=true, movable=true,
-		 update=function(){}, interaction=function(){}) {
+		 update=function(){}) {
 	super(position, size, animation, draw_priority);
 	this.bounding_box = new Block(this.position, this.size);
 	this.blocking = blocking;
 	this.movable = movable;
-	this.interaction = interaction;
 	this.velocity = new Vector(0.0, 0.0);
+	this.update = update;
     }
     update (delta_s) {}
     set_position (position) {
@@ -16,11 +16,15 @@ class Actor extends Renderable {
 	this.bounding_box = new Block(this.position, this.size);
     }
     step_physics (actors) {
-	if(!this.movable || !this.blocking){
+	if(!this.movable){
 	    return;
+	} else {
+		this.velocity = this.velocity.add(new Vector(0.0, FORCE_DUE_TO_GRAVITY).scale(PHYSICS_UPDATE_DELTA_S));
+		this.position = this.position.add(this.velocity.scale(PHYSICS_UPDATE_DELTA_S));
 	}
-	this.velocity = this.velocity.add(new Vector(0.0, FORCE_DUE_TO_GRAVITY).scale(PHYSICS_UPDATE_DELTA_S));
-	this.position = this.position.add(this.velocity.scale(PHYSICS_UPDATE_DELTA_S));
+	if(!this.blocking){
+		return;
+	}
 	for(var i = 0; i < actors.length; ++i){
 	    // Do not test for collision with self
 	    if(actors[i].id == this.id){

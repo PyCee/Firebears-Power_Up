@@ -13,7 +13,8 @@ class Renderable {
         console.log("ERROR::Renderable with draw_priority == " + draw_priority);
     }
 	this.should_display = true;
-	this.id = assign_renderable_id();
+    this.id = assign_renderable_id();
+    //console.log(this.id);
     }
     hide () {this.should_display = false;}
     show () {this.should_display = true;}

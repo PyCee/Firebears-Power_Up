@@ -43,17 +43,24 @@ class Scene {
     }
     set_renderables (renderables_list) {
 		this.renderables_list = renderables_list;
-
 		// Sort renerables_list so painters algorithm will draw according to priority
 		this.renderables_list.sort(function(ren_1, ren_2){
 			return ren_1.draw_priority - ren_2.draw_priority;
 		});
-    }
+	}
+	get_renderable_from_id(id){
+		for(var i = 0; i < this.renderables_list.length; ++i){
+			if(this.renderables_list[i].id == id){
+				return this.renderables_list[i];
+			}
+		}
+		console.log("ERROR::getting renderable from invalid id");
+		return this.renderables_list[i];
+	}
     add_renderable (renderable) {
 		var tmp_renderables = this.renderables_list;
 		tmp_renderables.push(renderable);
 		this.set_renderables(tmp_renderables);
-		return this.renderables_list[this.renderables_list.length - 1].id;
     }
     remove_renderable (renderable) {
 	var index = this.renderables_list.indexOf(renderable);
