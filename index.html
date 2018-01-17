@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Firebears: Power Up</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <!--link rel="icon" href="images/icon.png" type="image/x-icon"-->
+    
+  </head>
+  <body onload="resize_canvas()" onresize="resize_canvas()">
+    <main>
+      <canvas id="drawing_canvas"></canvas>
+      
+      <script src="js/resource_loader.js"></script>
+      
+      <script src="js/canvas.js"></script>
+      <script src="js/user_input.js"></script>
+      
+      <script src="js/vector.js"></script>
+      <script src="js/timeline.js"></script>
+      <script src="js/dialogue.js"></script>
+      <script src="js/event.js"></script>
+      
+      <script src="js/spritemap.js"></script>
+      <script src="js/animation.js"></script>
+      <script src="js/renderable.js"></script>
+      <script src="js/text.js"></script>
+      
+      <script src="js/progress_bar.js"></script>
+      <script src="js/sequence.js"></script>
+      
+      <script src="js/scene.js"></script>
+      <script src="js/selection.js"></script>
+
+      <script src="js/physics.js"></script>
+      <script src="js/dialogue.js"></script>
+      <script src="js/inventory.js"></script>
+      
+      <!--// Exploration-->
+      <script src="js/exploration/actor.js"></script>
+      <script src="js/exploration/block.js"></script>
+      <script src="js/exploration/exploration_scene.js"></script>
+      <script src="js/exploration/map.js"></script>
+      <script src="js/maps/basic_map.js"></script>
+      
+      <script src="js/loop.js"></script>
+      
+      <script>
+	<!--Run the loop-->
+	setInterval(loop, 16);
+      </script>
+    </main>
+  </body>
+</html>

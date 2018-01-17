@@ -1,0 +1,10 @@
+body {
+    background-color: hsla(135, 40%, 40%, 1.0);
+    margin: 0px;
+}
+main {
+    height: auto;
+}
+canvas {
+    background-color: hsla(135, 50%, 20%, 1.0);
+}
