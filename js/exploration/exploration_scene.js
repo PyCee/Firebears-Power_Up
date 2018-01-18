@@ -33,35 +33,36 @@ var exploration = {
     // Reference to the data that makes up the current map
     map: null
 };
-var robot = new Actor(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
+var robot = new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
 			  new Animation(Sprite.red, "Robot Move", [[0,0]], 1, -1),
-			  2, true, true, function(){});
+			  2);
 var ROBOT_MOVE_SPEED = 2.0;
 
 // Add basic control for exploration
 exploration.scene.user_input.add_keyboard_event("a", "press", function(){
-    robot.velocity.x -= ROBOT_MOVE_SPEED;
+	robot.turn_left();
+	robot.impulse_momentum(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
+    //robot.velocity.x -= ROBOT_MOVE_SPEED;
 }, true);
 exploration.scene.user_input.add_keyboard_event("a", "release", function(){
-    robot.velocity.x += ROBOT_MOVE_SPEED;
+	robot.impulse_momentum(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
+    //robot.velocity.x += ROBOT_MOVE_SPEED;
 });
 exploration.scene.user_input.add_keyboard_event("d", "press", function(){
-    robot.velocity.x += ROBOT_MOVE_SPEED;
+	robot.turn_right();
+	robot.impulse_momentum(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
+    //robot.velocity.x += ROBOT_MOVE_SPEED;
 }, true);
 exploration.scene.user_input.add_keyboard_event("d", "release", function(){
-    robot.velocity.x -= ROBOT_MOVE_SPEED;
+	robot.impulse_momentum(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
+    //robot.velocity.x -= ROBOT_MOVE_SPEED;
 });
-exploration.scene.user_input.add_keyboard_event(" ", "press", function(){
-	var power_block = new Actor(robot.position.add(new Vector(0.5, 0.0)), new Vector(0.4, 0.4),
+exploration.scene.user_input.add_keyboard_event("q", "press", function(){
+	// If the robot has a power block
+    var power_block = new Actor(robot.position.add(new Vector(0.5, 0.0)), new Vector(0.4, 0.4),
 								new Animation(Sprite.green, "Power Cube Idle"), 1,
 								false, true);
-	power_block.velocity = new Vector(2.0, -7.0);
-	exploration.scene.add_renderable(power_block);
-	power_block.update = function(){
-		if(exploration.scene.get_renderable_from_id(power_block.id).position.y > 
-		exploration.scene.inside_width * canvas_dimensions.aspect_ratio.multiplier){
-			// If the cube is below bounds, remove it
-			exploration.scene.remove_renderable_id(power_block.id);
-		}
-	}
+});
+exploration.scene.user_input.add_keyboard_event("e", "press", function(){
+	robot.launch();
 });
