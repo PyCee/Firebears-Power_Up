@@ -15,4 +15,7 @@ class Vector {
     normalize () {
 	return this.scale(Math.sqrt(vector.x * vector.x + vector.y * vector.y));
     }
+    copy () {
+        return new Vector(this.x, this.y);
+    }
 }

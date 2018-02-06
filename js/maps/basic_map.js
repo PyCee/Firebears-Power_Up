@@ -6,7 +6,7 @@ var Basic = {
                         canvas_dimensions.aspect_ratio.multiplier - 0.5),
                         new Vector(7, 0.5),
                 new Animation(Sprite.black, "Still Ground", [[0,0]], 1, -1),
-                1, true, false)
+                1, true, -1)
 };
 
 Basic.map.set_actors([Basic.ground, robot]);

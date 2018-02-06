@@ -15,9 +15,9 @@ class Robot extends Actor{
 
     }
     launch () {
-        var power_block = new Actor(robot.position.add(new Vector(0.5, 0.0)), new Vector(0.4, 0.4),
+        var power_block = new Actor(robot.position.add(new Vector(0.25, -0.5)), new Vector(0.4, 0.4),
 								new Animation(Sprite.green, "Power Cube Idle"), 1,
-                                true, true);
+                                true);
         switch(this.facing){
         case Direction.right:
             power_block.impulse_momentum(new Vector(2.0, -7.0));

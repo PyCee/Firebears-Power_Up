@@ -11,14 +11,30 @@ var exploration = {
 	}
 	// Physics
 	physics_time_accum += delta_s;
-	while(physics_time_accum >= PHYSICS_UPDATE_DELTA_S){
-	    
-	    // Step actor physics
-	    for(var i = 0; i < exploration.map.actors.length; ++i){
-		exploration.map.actors[i].step_physics(exploration.map.actors);
-	    }
-	    
-	    physics_time_accum -= PHYSICS_UPDATE_DELTA_S;
+	while(physics_time_accum >= PHYSICS.UPDATE_DELTA_S){
+		// Step actor physics
+		for(var i = 0; i < exploration.map.actors.length; ++i){
+			// Update horizontal positions
+			exploration.map.actors[i].step_x();
+		}
+		for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
+			for(var j = 0; j < exploration.map.actors.length; ++j){
+				// Resolve collisions
+				exploration.map.actors[j].resolve_collisions(exploration.map.actors);
+			}
+		}
+		for(var i = 0; i < exploration.map.actors.length; ++i){
+			// Update vertical positions
+			exploration.map.actors[i].step_y();
+		}
+		for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
+			for(var j = 0; j < exploration.map.actors.length; ++j){
+				// Resolve collisions
+				exploration.map.actors[j].resolve_collisions(exploration.map.actors);
+			}
+		}
+		
+	    physics_time_accum -= PHYSICS.UPDATE_DELTA_S;
 	}
 	//TODO: interpolate between the current and the next physics state
 	
@@ -42,26 +58,20 @@ var ROBOT_MOVE_SPEED = 2.0;
 exploration.scene.user_input.add_keyboard_event("a", "press", function(){
 	robot.turn_left();
 	robot.impulse_momentum(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
-    //robot.velocity.x -= ROBOT_MOVE_SPEED;
 }, true);
 exploration.scene.user_input.add_keyboard_event("a", "release", function(){
 	robot.impulse_momentum(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
-    //robot.velocity.x += ROBOT_MOVE_SPEED;
 });
 exploration.scene.user_input.add_keyboard_event("d", "press", function(){
 	robot.turn_right();
 	robot.impulse_momentum(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
-    //robot.velocity.x += ROBOT_MOVE_SPEED;
 }, true);
 exploration.scene.user_input.add_keyboard_event("d", "release", function(){
 	robot.impulse_momentum(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
-    //robot.velocity.x -= ROBOT_MOVE_SPEED;
 });
 exploration.scene.user_input.add_keyboard_event("q", "press", function(){
 	// If the robot has a power block
-    var power_block = new Actor(robot.position.add(new Vector(0.5, 0.0)), new Vector(0.4, 0.4),
-								new Animation(Sprite.green, "Power Cube Idle"), 1,
-								false, true);
+	// place block
 });
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){
 	robot.launch();
