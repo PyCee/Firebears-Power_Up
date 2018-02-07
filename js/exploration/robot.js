@@ -15,7 +15,7 @@ class Robot extends Actor{
 
     }
     launch () {
-        var power_block = new Actor(robot.position.add(new Vector(0.25, -0.5)), new Vector(0.4, 0.4),
+        var power_block = new Actor(robot.last_position.add(new Vector(0.25, -0.5)), new Vector(0.4, 0.4),
 								new Animation(Sprite.green, "Power Cube Idle"), 1,
                                 true);
         switch(this.facing){
@@ -31,8 +31,8 @@ class Robot extends Actor{
 	    exploration.scene.add_renderable(power_block);
 	    power_block.update = function(){
             // Change to: if cube collides with anything, stop moving in that axis
-		    if(exploration.scene.get_renderable_from_id(power_block.id).position.y > 
-		        exploration.scene.inside_width * canvas_dimensions.aspect_ratio.multiplier - 0.9001){
+		    if(exploration.scene.get_renderable_from_id(power_block.id).last_position.y > 
+		        exploration.scene.inside_width * canvas_dimensions.aspect_ratio.multiplier - 0.92){
                 // If the cube is interacting with the ground,
                 //   stop it from moving
                 exploration.scene.get_renderable_from_id(power_block.id).velocity = new Vector(0.0, 0.0);

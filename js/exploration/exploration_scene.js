@@ -27,7 +27,7 @@ var exploration = {
 			// Update vertical positions
 			exploration.map.actors[i].step_y();
 		}
-		for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
+		for(var i = 0; i < PHYSICS.ITERATIONS + 16; ++i){
 			for(var j = 0; j < exploration.map.actors.length; ++j){
 				// Resolve collisions
 				exploration.map.actors[j].resolve_collisions(exploration.map.actors);
