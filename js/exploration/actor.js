@@ -11,6 +11,7 @@ class Actor extends Renderable {
 	this.velocity = new Vector(0.0, 0.0);
 	this.mass = mass;
 	this.update = update;
+	this.friction_sources = [];
 	}
 	// display () { // uncomment this function to see last_positions
 	//     ctx.fillStyle = "#ffffff";
@@ -39,13 +40,27 @@ class Actor extends Renderable {
 	step_x () {
 		if(!this.is_moveable()){return;}
 		this.velocity.x = this.velocity.x + this.acceleration.x * PHYSICS.UPDATE_DELTA_S;
+
+		// Apply friction
+		for(var i =0; i < this.friction_sources.length; ++i){
+			var applied_frict = this.friction_sources[i].x * 0.05
+			if(applied_frict * applied_frict > this.velocity.x * this.velocity.x){
+				this.velocity.x = 0.0;
+			} else {
+				this.velocity.x -= applied_frict;
+			}
+		}
+		// Reset friction sources
+		this.friction_sources = [];
+
 		this.set_position(this.last_position.add(new Vector(this.velocity.x * PHYSICS.UPDATE_DELTA_S, 0.0)));
 	}
 	step_y () {
 		if(!this.is_moveable()){return;}
 		this.velocity.y = this.velocity.y +
 			(this.acceleration.y + FORCE_DUE_TO_GRAVITY) * PHYSICS.UPDATE_DELTA_S;
-		this.set_position(this.last_position.add(new Vector(0.0, this.velocity.y * PHYSICS.UPDATE_DELTA_S)));
+		this.set_position(new Vector(this.display_position.x, 
+			this.last_position.y + this.velocity.y * PHYSICS.UPDATE_DELTA_S));
 	}
 	resolve_collisions (actors) {
 		if(!this.blocking){
@@ -79,9 +94,10 @@ class Actor extends Renderable {
 					actor_mass_per = actors[i].mass / total_mass;
 				}
 
+				// Best one so far
 				var intersection_switch = 
 					actors[i].get_last_bounding_box().detect_intersection(this.get_last_bounding_box());
-				
+				var orig_intersection_switch = intersection_switch;
 				switch(intersection_switch){
 				case RELATIVE_POSITION.LEFT:
 					// Position this to the left of the actor
@@ -109,7 +125,7 @@ class Actor extends Renderable {
 					break;
 				case RELATIVE_POSITION.INTERSECTS:
 				default:
-					console.log("not applying collision response");
+					console.log("Actor.resolve_collisions intersection_switch not set correctly");
 					break;
 				}
 				switch(intersection_switch){
@@ -130,9 +146,20 @@ class Actor extends Renderable {
 					// Both actors get's their share of y-axis momentum, based on mass
 					this.impulse_momentum(new Vector(0.0, total_momentum.y * this_mass_per));
 					actors[i].impulse_momentum(new Vector(0.0, total_momentum.y * actor_mass_per));
+					
 					break;
 				default:
 					break;
+				}
+				// Setup friction between the two actors
+				var frict_diff = this.velocity.subtract(actors[i].velocity);
+				if(orig_intersection_switch == RELATIVE_POSITION.ABOVE){
+					this.friction_sources.push(frict_diff);
+				} else if(orig_intersection_switch == RELATIVE_POSITION.BELOW){
+					actors[i].friction_sources.push(frict_diff.scale(-1.0));
+				} else {
+					this.friction_sources.push(frict_diff);
+					actors[i].friction_sources.push(frict_diff.scale(-1.0));
 				}
 			}
 			if(this.bounding_box.intersects(actors[i].get_last_bounding_box())){

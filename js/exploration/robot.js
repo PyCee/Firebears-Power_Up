@@ -4,8 +4,8 @@ var Direction = {
 }
 
 class Robot extends Actor{
-    constructor (position, size, animation, draw_priority){
-        super(position, size, animation, draw_priority);
+    constructor (position, size, animation, draw_priority, mass){
+        super(position, size, animation, draw_priority, true, mass);
         this.has_block = false;
         this.facing = Direction.right;
     }
@@ -35,7 +35,7 @@ class Robot extends Actor{
 		        exploration.scene.inside_width * canvas_dimensions.aspect_ratio.multiplier - 0.92){
                 // If the cube is interacting with the ground,
                 //   stop it from moving
-                exploration.scene.get_renderable_from_id(power_block.id).velocity = new Vector(0.0, 0.0);
+                //exploration.scene.get_renderable_from_id(power_block.id).velocity = new Vector(0.0, 0.0);
 		    }
 	    }
     }

@@ -1,11 +1,11 @@
 const RELATIVE_POSITION = {
-    INTERSECTS: 0,
+    INTERSECTS: -1,
     LEFT: 1,
 	RIGHT: 2,
-	HORIZONTAL: 3,
-    ABOVE: 4,
-	BELOW: 8,
-	VERTICAL: 12
+	HORIZONTAL: 4,
+    ABOVE: 8,
+	BELOW: 16,
+	VERTICAL: 32
 };
 class Block {
     constructor (position, size) {

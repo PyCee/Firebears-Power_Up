@@ -13,7 +13,12 @@ class Vector {
 	return new Vector(this.x * scalar, this.y * scalar);
     }
     normalize () {
-	return this.scale(Math.sqrt(vector.x * vector.x + vector.y * vector.y));
+        var sum = vector.x * vector.x + vector.y * vector.y;
+        if(sum == 0.0){
+            return this;
+        } else {
+            return this.scale(Math.sqrt(sum));
+        }
     }
     copy () {
         return new Vector(this.x, this.y);

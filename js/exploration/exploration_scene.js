@@ -27,7 +27,7 @@ var exploration = {
 			// Update vertical positions
 			exploration.map.actors[i].step_y();
 		}
-		for(var i = 0; i < PHYSICS.ITERATIONS + 16; ++i){
+		for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
 			for(var j = 0; j < exploration.map.actors.length; ++j){
 				// Resolve collisions
 				exploration.map.actors[j].resolve_collisions(exploration.map.actors);
@@ -51,26 +51,26 @@ var exploration = {
 };
 var robot = new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
 			  new Animation(Sprite.red, "Robot Move", [[0,0]], 1, -1),
-			  2);
-var ROBOT_MOVE_SPEED = 2.0;
+			  6, 10);
+var ROBOT_MOVE_SPEED = 15.0 * robot.mass;
 
 // Add basic control for exploration
 exploration.scene.user_input.add_keyboard_event("a", "press", function(){
 	robot.turn_left();
-	robot.impulse_momentum(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
+	robot.impulse_force(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
 }, true);
 exploration.scene.user_input.add_keyboard_event("a", "release", function(){
-	robot.impulse_momentum(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
+	robot.impulse_force(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
 });
 exploration.scene.user_input.add_keyboard_event("d", "press", function(){
 	robot.turn_right();
-	robot.impulse_momentum(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
+	robot.impulse_force(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
 }, true);
 exploration.scene.user_input.add_keyboard_event("d", "release", function(){
-	robot.impulse_momentum(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
+	robot.impulse_force(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
 });
 exploration.scene.user_input.add_keyboard_event("q", "press", function(){
-	// If the robot has a power block
+	// If the robot has a power block and is positioned by a switch
 	// place block
 });
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){
