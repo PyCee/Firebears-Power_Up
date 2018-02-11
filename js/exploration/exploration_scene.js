@@ -71,7 +71,13 @@ exploration.scene.user_input.add_keyboard_event("d", "release", function(){
 });
 exploration.scene.user_input.add_keyboard_event("q", "press", function(){
 	// If the robot has a power block and is positioned by a switch
-	// place block
+	robot.place();
+});
+exploration.scene.user_input.add_keyboard_event("t", "press", function(){
+	// tmp pick up power cube
+	var p_cu = new Power_Cube(new Vector(0.0, 0.0));
+	// exploration.scene.add_renderable(p_cu);
+	robot.pickup(p_cu);
 });
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){
 	robot.launch();

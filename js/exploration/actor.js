@@ -1,23 +1,41 @@
 var FORCE_DUE_TO_GRAVITY = 9.8;
 
 class Actor extends Renderable {
-    constructor (position, size, animation, draw_priority=1, blocking=true,
+    constructor (position, size, animation, draw_priority=1, block_layers=[-1],
 		 mass=1.0, update=function(){}) {
 	super(position, size, animation, draw_priority);
 	this.bounding_box = new Block(this.display_position, this.size);
-	this.blocking = blocking; // Replace blocking with block-levels
+
+	// Block Layers are how collisions are organized.
+	// Each actor has a list of block layers.
+	// That actor will test for collision with all
+	//   actors that share any block layer number
+	// Special cases include:
+	//	 A first list-element of -1 = Behaves as if on every block layer
+	//   An empty block layer list = Will not collide with anything
+	this.block_layers = block_layers;
 	this.last_position = position;
 	this.acceleration = new Vector(0.0, 0.0);
 	this.velocity = new Vector(0.0, 0.0);
+
+	// Actor's mass in (units)
+	// A mass of -1 means the actor is immovable
 	this.mass = mass;
 	this.update = update;
 	this.friction_sources = [];
 	}
-	// display () { // uncomment this function to see last_positions
+	// display () { // Uncomment this function to see last_positions
 	//     ctx.fillStyle = "#ffffff";
 	// 	ctx.fillRect(this.last_position.x*150,this.last_position.y*150,
 	// 		this.size.x*150,this.size.y*150);
 	// }
+	freeze () {
+		this.mass = -1;
+		this.last_position = this.display_position;
+	}
+	set_block_layers (block_layers=[]) {
+		this.block_layers = block_layers;
+	}
 	is_moveable () {
 		return this.mass != -1;
 	}
@@ -43,7 +61,7 @@ class Actor extends Renderable {
 
 		// Apply friction
 		for(var i =0; i < this.friction_sources.length; ++i){
-			var applied_frict = this.friction_sources[i].x * 0.05
+			var applied_frict = this.friction_sources[i].x * 0.10;
 			if(applied_frict * applied_frict > this.velocity.x * this.velocity.x){
 				this.velocity.x = 0.0;
 			} else {
@@ -63,22 +81,44 @@ class Actor extends Renderable {
 			this.last_position.y + this.velocity.y * PHYSICS.UPDATE_DELTA_S));
 	}
 	resolve_collisions (actors) {
-		if(!this.blocking){
-			// If this actor is not blocking,
-			//   No reason to test for collisions
-			return;
-		} else if(this.mass == -1){
+		if(this.mass == -1){
 			// If this actor does not move,
 			//   let other actors resolve their collisions with this
+			return;
+		} else if (this.block_layers.length == 0){
+			// If this actor does not collide with anything
 			return;
 		}
 		var should_update_last_position = true;
 		for(var i = 0; i < actors.length; ++i){
-		    if(actors[i].id == this.id || !actors[i].blocking){
+			// For each actor
+		    if(actors[i].id == this.id){
 				// If this actor is being tested with itself
-				// Or the actor is not blocking
 				continue;
 			}
+			if(actors[i].block_layers.length == 0){
+				// If the actor does not collide with anything
+				continue;
+			}
+			var share_block_layer = false;
+			share_block_layer = this.block_layers[0] != -1 || actors[i].block_layers[0] != -1;
+			// Assign share_block_layer to true if either actor collides with all other actors
+			for(var j = 0; j < this.block_layers.length; ++j){
+				// For each block layer in this
+				for(var k = 0; k < actors[i].block_layers.length; ++k){
+					// For each block layer in actor[i]
+					if(this.block_layers[j] == actors[i].block_layers[k]){
+						// If the layer is shared by both actors
+						share_block_layer = true;
+						break;
+					}
+				}
+			}
+			if(!share_block_layer){
+				// If the actors don't share a block layer
+				continue;
+			}
+
 			if(this.bounding_box.intersects(actors[i].bounding_box)){
 				// If the actor's bounding box and this bounding box intersect
 				

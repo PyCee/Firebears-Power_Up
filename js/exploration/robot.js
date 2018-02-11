@@ -2,44 +2,46 @@ var Direction = {
     left: 0,
     right: 1
 }
-
 var power_cube_id_list = [];
+const CUBE_LAUNCH_Y_VELOCITY = -6.5;
 
 class Robot extends Actor{
     constructor (position, size, animation, draw_priority, mass){
-        super(position, size, animation, draw_priority, true, mass);
-        this.has_block = false;
+        super(position, size, animation, draw_priority, [-1], mass);
+        this.cube = null;
         this.facing = Direction.right;
     }
     turn_right () {this.facing = Direction.right;}
     turn_left () {this.facing = Direction.left;}
-    pickup () {
-
-    }
+    pickup (cube) {this.cube = cube;}
+    has_cube () {return this.cube != null;}
     launch () {
         var power_block = new Power_Cube(robot.last_position.add(new Vector(0.25, -0.5)));
         switch(this.facing){
         case Direction.right:
-            power_block.impulse_momentum(new Vector(2.0, -7.0));
+            power_block.impulse_momentum(new Vector(2.0, CUBE_LAUNCH_Y_VELOCITY));
             break;
         case Direction.left:
-            power_block.impulse_momentum(new Vector(-2.0, -7.0));
+            power_block.impulse_momentum(new Vector(-2.0, CUBE_LAUNCH_Y_VELOCITY));
             break;
         default:
             break;
         }
         exploration.scene.add_renderable(power_block);
-	    // power_block.update = function(){
-        //     // Change to: if cube collides with anything, stop moving in that axis
-		//     if(exploration.scene.get_renderable_from_id(power_block.id).last_position.y > 
-		//         exploration.scene.inside_width * canvas_dimensions.aspect_ratio.multiplier - 0.92){
-        //         // If the cube is interacting with the ground,
-        //         //   stop it from moving
-        //         //exploration.scene.get_renderable_from_id(power_block.id).velocity = new Vector(0.0, 0.0);
-		//     }
-	    // }
     }
-    drop () {
-
+    place () {
+        if(this.has_cube()){
+            // If the robot has a cube
+            for(var i = 0; i < switch_id_list.length; ++i){
+                // For each switch
+                var sw = exploration.scene.get_renderable_from_id(switch_id_list[i]);
+                if(this.bounding_box.intersects(sw.bounding_box)){
+                    // If the robot and switch intersect
+                    sw.add_cube(this.cube);
+                    exploration.scene.add_renderable(this.cube);
+                    this.cube = null;
+                }
+            }
+        }
     }
 }

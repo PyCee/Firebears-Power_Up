@@ -54,8 +54,7 @@ class Scene {
 				return this.renderables_list[i];
 			}
 		}
-		console.log("ERROR::getting renderable from invalid id: " + id);
-		return this.renderables_list[i];
+		return null;
 	}
     add_renderable (renderable) {
 		var tmp_renderables = this.renderables_list;
