@@ -1,8 +1,8 @@
 class Animation {
-    constructor (spritemap, name="DEFAULT_ANIMATION_NAME", frame_array=[[0,0]],
+    constructor (name, spritemap, frame_array=[[0,0]],
 		 duration=1.0, base_repeats=1) {
-	this.spritemap = spritemap;
 	this.name = name;
+	this.spritemap = spritemap;
 	this.frame_array = frame_array;
 	this.duration = duration;
 	this.frame_time = this.duration / this.frame_array.length;
@@ -36,7 +36,7 @@ class Animation {
 	this.repeats = this.base_repeats;
     }
     update (delta_s) {
-	this.timeline.update(delta_s);
+	//this.timeline.update(delta_s);
 	while(this.timeline.get_elapsed_time() > this.frame_time){
 	    this.timeline.set(this.timeline.get_elapsed_time() - this.frame_time);
 	    ++this.frame;

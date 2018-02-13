@@ -5,9 +5,9 @@ var exploration = {
     scene: new Scene("Exploration", 1.0, function(){
 	physics_time_accum = 0;
     }, function(delta_s){
-
+	// Update all actors
 	for(var i = 0; i < exploration.map.actors.length; ++i){
-		exploration.map.actors[i].update();
+		exploration.map.actors[i].ai_update();
 	}
 	// Physics
 	physics_time_accum += delta_s;
@@ -50,7 +50,7 @@ var exploration = {
     map: null
 };
 var robot = new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
-			  new Animation(Sprite.red, "Robot Move", [[0,0]], 1, -1),
+			  new Animation("Robot Move", Sprite.red, [[0,0]], 1, -1),
 			  6, 10);
 var ROBOT_MOVE_SPEED = 15.0 * robot.mass;
 
@@ -75,9 +75,17 @@ exploration.scene.user_input.add_keyboard_event("q", "press", function(){
 });
 exploration.scene.user_input.add_keyboard_event("t", "press", function(){
 	// tmp pick up power cube
-	var p_cu = new Power_Cube(new Vector(0.0, 0.0));
-	// exploration.scene.add_renderable(p_cu);
-	robot.pickup(p_cu);
+	for(var i = 0; i < cube_stack_id_list.length; ++i){
+		var cube_stack = exploration.scene.get_renderable_from_id(cube_stack_id_list[i]);
+		if(cube_stack.bounding_box.intersects(robot.bounding_box)){
+			console.log("get cube");
+			var cube = new Power_Cube(new Vector(0.0, 0.0));
+			robot.pickup(cube);
+		}
+	}
+	// var p_cu = new Power_Cube(new Vector(0.0, 0.0));
+	// // exploration.scene.add_renderable(p_cu);
+	// robot.pickup(p_cu);
 });
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){
 	robot.launch();

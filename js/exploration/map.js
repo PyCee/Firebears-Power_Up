@@ -7,8 +7,8 @@ class Map {
 	this.actors = actors;
 	this.events = events;
     }
-    set (robot_start_position) {
-	robot.set_position(robot_start_position);
+    set (robot_start_position=new Vector(0.0, 0.0)) {
+	robot.set_absolute_position(robot_start_position);
 	exploration.scene.inside_width = this.width;
 	
 	// Reset variables for use in next map

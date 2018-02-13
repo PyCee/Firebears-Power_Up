@@ -4,7 +4,7 @@ var last_frame_time = window.performance.now();
 var current_frame_time = 0;
 
 // Show the title scene on start
-Basic.map.set(new Vector(0,0));
+Basic.map.set(new Vector(5.0, 16 * canvas_dimensions.aspect_ratio.multiplier - (0.5 + 0.8)));
 exploration.scene.show();
 
 function loop () {
@@ -14,7 +14,8 @@ function loop () {
     current_frame_time = window.performance.now();
     var delta_s = (current_frame_time - last_frame_time)/1000;
     last_frame_time = current_frame_time;
-    global_timeline.update(delta_s);
+
+    Update_Timelines(delta_s);
 
     // Update current scene
     curr_scene.update(delta_s);

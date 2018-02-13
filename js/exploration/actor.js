@@ -2,7 +2,7 @@ var FORCE_DUE_TO_GRAVITY = 9.8;
 
 class Actor extends Renderable {
     constructor (position, size, animation, draw_priority=1, block_layers=[-1],
-		 mass=1.0, update=function(){}) {
+		 mass=1.0, ai_update=function(){}) {
 	super(position, size, animation, draw_priority);
 	this.bounding_box = new Block(this.display_position, this.size);
 
@@ -21,7 +21,7 @@ class Actor extends Renderable {
 	// Actor's mass in (units)
 	// A mass of -1 means the actor is immovable
 	this.mass = mass;
-	this.update = update;
+	this.ai_update = ai_update;
 	this.friction_sources = [];
 	}
 	// display () { // Uncomment this function to see last_positions
@@ -29,6 +29,9 @@ class Actor extends Renderable {
 	// 	ctx.fillRect(this.last_position.x*150,this.last_position.y*150,
 	// 		this.size.x*150,this.size.y*150);
 	// }
+	set_ai (fun) {
+		this.ai_update = fun;
+	}
 	freeze () {
 		this.mass = -1;
 		this.last_position = this.display_position;
@@ -39,8 +42,15 @@ class Actor extends Renderable {
 	is_moveable () {
 		return this.mass != -1;
 	}
-    update (delta_s) {}
+	ai_update (delta_s) {}
+	set_absolute_position (position) {
+		// Set position regardless of physics
+		this.display_position = position;
+		this.bounding_box = new Block(this.display_position, this.size);
+		this.last_position = position;
+	}
     set_position (position) {
+		// Set position, but not the phyics-related last_position
 		this.display_position = position;
 		this.bounding_box = new Block(this.display_position, this.size);
 	}

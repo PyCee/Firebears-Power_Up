@@ -1,9 +1,16 @@
+var timeline_list = [];
+function Update_Timelines (delta_s) {
+    for(var i = 0; i < timeline_list.length; ++i){
+        timeline_list[i].update(delta_s);
+    }
+}
 class Timeline {
     constructor (active=true) {
 	// Elapsed time in seconds
 	this.elapsed_time = 0.0;
 	this.active = active;
-	this.timers = [];
+    this.timers = [];
+    timeline_list.push(this);
     }
     get_elapsed_time () {return this.elapsed_time;}
     start () {this.active = true;}

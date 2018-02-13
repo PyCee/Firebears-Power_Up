@@ -1,8 +1,8 @@
-const SCALE_SCORING_BOX_SIZE = new Vector(1.3, 2.0);
+const SCALE_SCORING_BOX_SIZE = new Vector(1.3, 3.0);
 
 class Scale extends Goal {
     constructor (position, draw_priority) {
-        super(position, new Vector(1.3, 0.3), new Animation(Sprite.blue, "Scale"),
+        super(position, new Vector(1.3, 0.3), new Animation("Scale", Sprite.blue),
             draw_priority, [1]);
         this.scoring_box = new Block(position.subtract(new Vector(0.0, SCALE_SCORING_BOX_SIZE.y)),
             SCALE_SCORING_BOX_SIZE);
@@ -20,7 +20,6 @@ class Scale extends Goal {
             var cube = exploration.scene.get_renderable_from_id(power_cube_id_list[i]);
             if(cube && this.scoring_box.intersects(cube.bounding_box)){
                 this.cube_count++;
-                // this_.add_cube(cube);
             }
         }
     }

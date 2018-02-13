@@ -11,7 +11,7 @@ var switch_id_list = [];
 
 class Switch extends Goal {
     constructor (position, draw_priority) {
-        super(position, new Vector(1.5, 0.5), new Animation(Sprite.blue, "Switch"), draw_priority, []);
+        super(position, new Vector(1.5, 0.5), new Animation("Switch", Sprite.blue), draw_priority, []);
         switch_id_list.push(this.id);
     }
     add_cube (cube) {
