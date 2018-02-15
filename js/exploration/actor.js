@@ -218,7 +218,7 @@ class Actor extends Renderable {
 			}
 		}
 		if(should_update_last_position){
-			this.last_position = this.display_position.copy();
+			this.last_position = this.display_position;
 		}
     }
 }

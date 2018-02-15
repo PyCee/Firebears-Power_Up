@@ -9,8 +9,8 @@ const RELATIVE_POSITION = {
 };
 class Block {
     constructor (position, size) {
-	this.position = position.copy();
-	this.size = size.copy();
+	this.position = position;
+	this.size = size;
     }
     intersects (block) {
 	return this.detect_intersection(block) == RELATIVE_POSITION.INTERSECTS;

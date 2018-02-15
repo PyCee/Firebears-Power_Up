@@ -20,7 +20,4 @@ class Vector {
             return this.scale(Math.sqrt(sum));
         }
     }
-    copy () {
-        return new Vector(this.x, this.y);
-    }
 }
