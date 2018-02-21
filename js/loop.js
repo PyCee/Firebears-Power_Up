@@ -4,7 +4,7 @@ var last_frame_time = window.performance.now();
 var current_frame_time = 0;
 
 // Show the title scene on start
-Basic.map.set(new Vector(5.0, 16 * canvas_dimensions.aspect_ratio.multiplier - (0.5 + 0.8)));
+Arena.map.set(new Vector(7.0, ARENA_HEIGHT - (0.5 + 0.8)));
 exploration.scene.show();
 
 function loop () {
@@ -19,6 +19,10 @@ function loop () {
 
     // Update current scene
     curr_scene.update(delta_s);
+    
+    Update_Viewport();
+
+    curr_scene.display();
     
     // Update the cutscene variable
     Active_Sequence_List.update(delta_s);

@@ -1,10 +1,10 @@
 var Switch_Cube_Relative_Positioning = [
-    new Vector(0.0, -0.4),
-    new Vector(0.45, -0.4),
-    new Vector(0.90, -0.4),
-    new Vector(0.275, -0.8),
-    new Vector(0.725, -0.8),
-    new Vector(0.45, -1.2)
+    new Vector(0.15, -0.32),
+    new Vector(0.60, -0.32),
+    new Vector(1.05, -0.32),
+    new Vector(0.375, -0.64),
+    new Vector(0.825, -0.64),
+    new Vector(0.60, -0.96)
 ];
 
 var switch_id_list = [];

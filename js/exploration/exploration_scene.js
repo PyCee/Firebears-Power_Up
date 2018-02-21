@@ -4,7 +4,8 @@ var exploration = {
     // The scene that will be updated for each map
     scene: new Scene("Exploration", 1.0, function(){
 	physics_time_accum = 0;
-    }, function(delta_s){
+	}, null,
+	function(delta_s){
 	// Update all actors
 	for(var i = 0; i < exploration.map.actors.length; ++i){
 		exploration.map.actors[i].ai_update();

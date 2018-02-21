@@ -19,6 +19,8 @@ var Sprite = {
     black: new Spritemap("black.png"),
     red: new Spritemap("red.png"),
     green: new Spritemap("green.png"),
-    blue: new Spritemap("blue.png")
+    blue: new Spritemap("blue.png"),
+    power_cube: new Spritemap("power_cube.png"),
+    arena_background: new Spritemap("arena_bg.png")
     //: new Spritemap(".png")
 };

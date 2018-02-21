@@ -2,11 +2,12 @@ var curr_scene = null;
 var scene_scale = 1.0;
 class Scene {
     constructor (name="DEFAULT", inside_width=1.0, show_callback=function(){},
-		 inner_update_callback=function(delta_s){}) {
+		background_actor=null, inner_update_callback=function(delta_s){}) {
 	this.name = name;
 	this.inside_width = inside_width;
 	this.show_callback = show_callback;
 	this.inner_update_callback = inner_update_callback;
+	this.background_actor = background_actor;
 	
 	this.renderables_list = [];
 	this.user_input = new User_Input_Group();
@@ -19,7 +20,6 @@ class Scene {
 	for(var i = 0; i < this.renderables_list.length; ++i){
 	    this.renderables_list[i].update_animation(delta_s);
 	}
-	this.display();
     }
     display () {
 	// TODO: set scene_scale to canvas.scale (whatever it is)
@@ -28,6 +28,9 @@ class Scene {
 	scene_scale = scale;
 	//scene_scale = 1.0;
 	// Draw scene's renderables
+	if(this.background_actor != null){
+		this.background_actor.display(this.background_actor.display_position, this.background_actor.size);
+	}
 	for(var i = 0; i < this.renderables_list.length; ++i){
 		this.renderables_list[i].display();
 	}
