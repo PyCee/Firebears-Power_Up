@@ -8,8 +8,7 @@ var Switch_Cube_Relative_Positioning = [
 ];
 
 var switch_id_list = [];
-
-class Switch extends Goal {
+class Switch_Component extends Goal {
     constructor (position, draw_priority) {
         super(position, new Vector(1.5, 0.5), new Animation("Switch", Sprite.blue), draw_priority, []);
         switch_id_list.push(this.id);
@@ -20,5 +19,12 @@ class Switch extends Goal {
         cube.freeze();
         cube.set_block_layers([]);
         this.cube_count++;
+    }
+}
+const SECOND_SWITCH_OFFSET = new Vector(1.6, 0.0);
+class Switch {
+    constructor (position, draw_priority) {
+        this.left_component = new Switch_Component(position, draw_priority);
+        this.right_component = new Switch_Component(position.add(SECOND_SWITCH_OFFSET), draw_priority);
     }
 }

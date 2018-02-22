@@ -1,6 +1,6 @@
 const SCALE_SCORING_BOX_SIZE = new Vector(1.3, 3.0);
 
-class Scale extends Goal {
+class Scale_Component extends Goal {
     constructor (position, draw_priority) {
         super(position, new Vector(1.3, 0.3), new Animation("Scale", Sprite.blue),
             draw_priority, [1]);
@@ -22,5 +22,12 @@ class Scale extends Goal {
                 this.cube_count++;
             }
         }
+    }
+}
+const SECOND_SCALE_OFFSET = new Vector(1.4, 0.0);
+class Scale {
+    constructor (position, draw_priority) {
+        this.left_component = new Scale_Component(position, draw_priority);
+        this.right_component = new Scale_Component(position.add(SECOND_SCALE_OFFSET), draw_priority);
     }
 }

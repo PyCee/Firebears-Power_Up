@@ -1,5 +1,6 @@
 const DISTANCE_BEHIND_DRIVER_WALLS = 2.0;
 const FIELD_WIDTH = 16.0;
+const RIGHT_WALL = FIELD_WIDTH + DISTANCE_BEHIND_DRIVER_WALLS;
 const ARENA_WIDTH = FIELD_WIDTH + DISTANCE_BEHIND_DRIVER_WALLS * 2;
 const ARENA_HEIGHT = ARENA_WIDTH * canvas_dimensions.aspect_ratio.multiplier;
 
@@ -36,8 +37,9 @@ var Arena = {
     l_driver_wall: new Actor(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 16.0 - 0.4, ARENA_HEIGHT - (0.5 + 2.5)),
         new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))),
         new Animation("l_driver_wall", Sprite.black), 1, [-1], -1),
-    switch: new Switch(new Vector(3.0 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.5)), 1),
-    scale: new Scale(new Vector(6.0 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 2.5)), 1),
+    l_switch: new Switch(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 3.2, ARENA_HEIGHT - (0.5 + 0.5)), 1),
+    r_switch: new Switch(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)), 1),
+    scale: new Scale(new Vector(ARENA_WIDTH/2 - 1.35, ARENA_HEIGHT - (0.5 + 2.5)), 1),
     cube_stack: new Cube_Stack(new Vector(0.4 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.66)), 1),
 };
 
@@ -46,6 +48,10 @@ Arena.map.set_actors([Arena.ground,
     Arena.l_driver_wall,
     robot,
     Spinny.robot,
-    Arena.switch,
-    Arena.scale,
+    Arena.l_switch.left_component,
+    Arena.l_switch.right_component,
+    Arena.r_switch.left_component,
+    Arena.r_switch.right_component,
+    Arena.scale.left_component,
+    Arena.scale.right_component,
     Arena.cube_stack]);

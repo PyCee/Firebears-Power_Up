@@ -46,6 +46,7 @@ class Robot extends Actor{
                     sw.add_cube(this.cube);
                     exploration.scene.add_renderable(this.cube);
                     this.cube = null;
+                    break;
                 }
             }
         }
