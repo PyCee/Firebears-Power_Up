@@ -4,12 +4,14 @@ var last_frame_time = window.performance.now();
 var current_frame_time = 0;
 
 // Show the title scene on start
-Arena.map.set(new Vector(7.0, ARENA_HEIGHT - (0.5 + 0.8)));
+Arena.map.set(new Vector(4.0, ARENA_HEIGHT - (0.5 + 0.8)));
 exploration.scene.show();
 
 function loop () {
     // Main game loop
 
+    Reset_Debug_String();
+    
     // Calculate duration of the last frame
     current_frame_time = window.performance.now();
     var delta_s = (current_frame_time - last_frame_time)/1000;
@@ -20,7 +22,7 @@ function loop () {
     // Update current scene
     curr_scene.update(delta_s);
     
-    Update_Viewport();
+    // Update_Viewport();
 
     curr_scene.display();
     

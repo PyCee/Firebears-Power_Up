@@ -9,8 +9,10 @@
   </head>
   <body onload="resize_canvas()" onresize="resize_canvas()">
     <main>
+      <p id="debug_string"></p>
       <canvas id="drawing_canvas"></canvas>
       
+      <script src="js/debug_string.js"></script>
       <script src="js/resource_loader.js"></script>
       
       <script src="js/canvas.js"></script>
@@ -38,14 +40,14 @@
 
       
       <!--// Exploration-->
-      <script src="js/exploration/block.js"></script>
+      <script src="js/exploration/collision_box.js"></script>
+      <script src="js/exploration/physics_state.js"></script>
       <script src="js/exploration/actor.js"></script>
       <script src="js/exploration/power_cube.js"></script>
       <script src="js/exploration/robot.js"></script>
 
       <script src="js/robots/spinny.js"></script></script>
 
-      <script src="js/exploration/goal.js"></script>
       <script src="js/exploration/switch.js"></script>
       <script src="js/exploration/scale.js"></script>
       <script src="js/exploration/portal.js"></script>
