@@ -8,7 +8,7 @@ var exploration = {
 	function(delta_s){
 	// Update all actors
 	for(var i = 0; i < exploration.map.actors.length; ++i){
-		exploration.map.actors[i].ai_update();
+		exploration.map.actors[i].ai_update(delta_s);
 	}
 	// Physics
 	physics_time_accum += delta_s;
@@ -51,24 +51,27 @@ var exploration = {
     map: null
 };
 var robot = new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
-			  new Animation("Robot Move", Sprite.red, [[0,0]], 1, -1),
-			  6, 10);
-var ROBOT_MOVE_SPEED = 15.0 * robot.mass;
+				new Animation("Robot Anim", Sprite.red, [[0,0]], 1, -1),
+				6, 1, 
+				[
+				  new Collision_Box(new Vector(1.0, 0.8), new Vector(0.0, 0.0), [-1])
+				]);
+var ROBOT_MOVE_SPEED = 15.0 * robot.physics_state.mass;
 
 // Add basic control for exploration
 exploration.scene.user_input.add_keyboard_event("a", "press", function(){
 	robot.turn_left();
-	robot.impulse_force(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
+	robot.physics_state.impulse_force(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
 }, true);
 exploration.scene.user_input.add_keyboard_event("a", "release", function(){
-	robot.impulse_force(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
+	robot.physics_state.impulse_force(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
 });
 exploration.scene.user_input.add_keyboard_event("d", "press", function(){
 	robot.turn_right();
-	robot.impulse_force(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
+	robot.physics_state.impulse_force(new Vector(1.0 * ROBOT_MOVE_SPEED, 0.0));
 }, true);
 exploration.scene.user_input.add_keyboard_event("d", "release", function(){
-	robot.impulse_force(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
+	robot.physics_state.impulse_force(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
 });
 exploration.scene.user_input.add_keyboard_event("q", "press", function(){
 	// If the robot has a power block and is positioned by a switch

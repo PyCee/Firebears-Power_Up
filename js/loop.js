@@ -10,8 +10,8 @@ exploration.scene.show();
 function loop () {
     // Main game loop
 
-    Reset_Debug_String();
-    
+    // Reset_Debug_String();
+
     // Calculate duration of the last frame
     current_frame_time = window.performance.now();
     var delta_s = (current_frame_time - last_frame_time)/1000;

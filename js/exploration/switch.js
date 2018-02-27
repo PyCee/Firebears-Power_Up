@@ -8,9 +8,9 @@ var Switch_Cube_Relative_Positioning = [
 ];
 
 var switch_id_list = [];
-class Switch_Component extends Goal {
+class Switch_Component extends Actor {
     constructor (position, draw_priority, sprite) {
-        super(position, new Vector(1.5, 0.5), new Animation("Switch", sprite), draw_priority, []);
+        super(position, new Vector(1.5, 0.5), new Animation("Switch", sprite), draw_priority);
         switch_id_list.push(this.id);
     }
     add_cube (cube) {
@@ -28,9 +28,9 @@ class Switch {
         this.opp_side = new Switch_Component(position, draw_priority, Sprite.red);
         var own_left = Math.floor(Math.random() * 2);
         if(own_left){
-            this.opp_side.set_absolute_position(this.opp_side.display_position.add(SECOND_SWITCH_OFFSET));
+            this.opp_side.set_position(this.opp_side.position.add(SECOND_SWITCH_OFFSET));
         } else {
-            this.ally_side.set_absolute_position(this.ally_side.display_position.add(SECOND_SWITCH_OFFSET));
+            this.ally_side.set_position(this.ally_side.position.add(SECOND_SWITCH_OFFSET));
         }
     }
 }

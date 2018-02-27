@@ -6,8 +6,8 @@ var power_cube_id_list = [];
 const CUBE_LAUNCH_Y_VELOCITY = -7.0;
 
 class Robot extends Actor{
-    constructor (position, size, animation, draw_priority, mass){
-        super(position, size, animation, draw_priority, [-1], mass);
+    constructor (position, size, animation, draw_priority, mass, collision_boxes){
+        super(position, size, animation, draw_priority, function(){}, mass, collision_boxes);
         this.cube = null;
         this.facing = Direction.right;
     }

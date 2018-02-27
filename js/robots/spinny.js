@@ -1,6 +1,6 @@
 var Spinny = {
     robot: new Robot(new Vector(0.0, 0.0), 
-        new Vector(1.0, 0.3), new Animation("Spinny Anim", Sprite.red), 2, 7.0),
+        new Vector(1.0, 0.3), new Animation("Spinny Anim", Sprite.red)),
     speed: 0.4,
     timer: new Timeline(false),
     curr_spin_duration: Math.random() * 3.0,

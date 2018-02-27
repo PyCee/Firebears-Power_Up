@@ -5,6 +5,9 @@ function Reset_Debug_String () {
     Update_Debug_String();
 }
 function Append_Debug_String (string) {
+    if(debug_string.length > 1000){
+        return;
+    }
     if(debug_string.length > 0){
         debug_string += "</br>";
     }
