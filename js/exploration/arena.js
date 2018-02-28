@@ -22,15 +22,19 @@ function arena_viewport_update () {
 var Arena = {
     map: new Map(ARENA_WIDTH, new Actor(new Vector(0.0, 0.0), new Vector(ARENA_WIDTH, ARENA_HEIGHT),
         new Animation("Arena Background", Sprite.arena_background)), function(){
-        Spinny.robot.set_position(new Vector(14.0 + DISTANCE_BEHIND_DRIVER_WALLS,
-            ARENA_HEIGHT - (0.5 + 0.3)));
+        Spinny.robot.set_absolute_position(new Vector(14.0 + DISTANCE_BEHIND_DRIVER_WALLS,
+            ARENA_HEIGHT - (0.5 + 0.3 + 1.0)));
         Spinny.timer.reset();
         Spinny.timer.start();
         Viewport.set_update(arena_viewport_update);
     }),
     ground: new Actor(new Vector(0.0, ARENA_HEIGHT - 0.5),
-            new Vector(ARENA_WIDTH, 0.5), new Animation("Still Ground", Sprite.black),
-            1),
+        new Vector(ARENA_WIDTH, 0.5), new Animation("Still Ground", Sprite.black),
+        1, function(){}, -1,
+        [
+            new Collision_Box(new Vector(ARENA_WIDTH, 0.5),
+                new Vector(0.0, 0.0), [-1])
+        ]),
     r_driver_wall: new Actor(new Vector(DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 2.5)),
         new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))),
         new Animation("r_driver_wall", Sprite.black), 1, function(){}, -1,
@@ -41,29 +45,27 @@ var Arena = {
     l_driver_wall: new Actor(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 16.0 - 0.4, ARENA_HEIGHT - (0.5 + 2.5)),
         new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))),
         new Animation("l_driver_wall", Sprite.black), 1, function(){}, -1,
-        [new Collision_Box(new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))), 
-            new Vector(0.0, 0.0), [-1])]),
+        [
+            new Collision_Box(new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))), 
+                new Vector(0.0, 0.0), [-1])
+        ]),
     l_switch: new Switch(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 3.2, ARENA_HEIGHT - (0.5 + 0.5)), 1),
     r_switch: new Switch(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)), 1),
-    scale: new Scale(new Vector(ARENA_WIDTH/2 - 1.35, ARENA_HEIGHT - (0.5 + 2.5)), 1),
+    scale: new Scale(new Vector(ARENA_WIDTH/2 - 1.35, ARENA_HEIGHT - (0.5 + 2.5)), 8),
     cube_stack: new Cube_Stack(new Vector(0.4 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.66)), 1),
 };
 
-Append_Debug_String(Arena.r_driver_wall.physics_state.collision_boxes.length);
-
-Append_Debug_String(robot.physics_state.collision_boxes.length);
-
 Arena.map.set_actors([
-    //Arena.ground,
+    Arena.ground,
     Arena.r_driver_wall,
-    //Arena.l_driver_wall,
-    robot//,
+    Arena.l_driver_wall,
+    robot,
     // Spinny.robot,
-    // Arena.l_switch.ally_side,
-    // Arena.l_switch.opp_side,
-    // Arena.r_switch.ally_side,
-    // Arena.r_switch.opp_side,
-    // Arena.scale.ally_side,
-    // Arena.scale.opp_side,
-    // Arena.cube_stack
+    Arena.l_switch.ally_side,
+    Arena.l_switch.opp_side,
+    Arena.r_switch.ally_side,
+    Arena.r_switch.opp_side,
+    Arena.scale.ally_side,
+    Arena.scale.opp_side,
+    Arena.cube_stack
     ]);

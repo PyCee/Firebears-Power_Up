@@ -18,7 +18,7 @@ class Robot extends Actor{
     launch () {
         if(this.has_cube()){
             // var power_block = new Power_Cube(robot.last_position.add(new Vector(0.25, -0.5)));
-            this.cube.set_absolute_position(robot.last_position.add(new Vector(0.25, -0.5)));
+            this.cube.set_absolute_position(robot.position.add(new Vector(0.25, -0.5)));
             switch(this.facing){
             case Direction.right:
                 this.cube.impulse_momentum(new Vector(2.0, CUBE_LAUNCH_Y_VELOCITY));
@@ -41,7 +41,7 @@ class Robot extends Actor{
             for(var i = 0; i < switch_id_list.length; ++i){
                 // For each switch
                 var sw = exploration.scene.get_renderable_from_id(switch_id_list[i]);
-                if(this.bounding_box.intersects(sw.bounding_box)){
+                if(this.physics_state.intersects(sw.physics_state)){
                     // If the robot and switch intersect
                     sw.add_cube(this.cube);
                     exploration.scene.add_renderable(this.cube);

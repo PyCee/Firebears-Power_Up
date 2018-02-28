@@ -1,6 +1,9 @@
 var Spinny = {
-    robot: new Robot(new Vector(0.0, 0.0), 
-        new Vector(1.0, 0.3), new Animation("Spinny Anim", Sprite.red)),
+    robot: new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.3),
+                new Animation("Spinny Anim", Sprite.red), 2, 1, [
+                    new Collision_Box(new Vector(1.0, 0.3),
+                        new Vector(0.0, 0.0), [-1])
+                ]),
     speed: 0.4,
     timer: new Timeline(false),
     curr_spin_duration: Math.random() * 3.0,
@@ -8,7 +11,7 @@ var Spinny = {
 }
 
 function spinny_ai () {
-    var move_speed = Spinny.speed * Spinny.robot.mass;
+    var move_speed = Spinny.speed * Spinny.robot.physics_state.mass;
 
     if(Spinny.timer.get_elapsed_time() > Spinny.curr_spin_duration){
         Spinny.timer.reset();

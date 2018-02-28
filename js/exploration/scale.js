@@ -2,7 +2,16 @@ const SCALE_SCORING_BOX_SIZE = new Vector(1.3, 3.0);
 
 class Scale_Component extends Actor {
     constructor (position, draw_priority, sprite) {
-        super(position, new Vector(1.3, 0.3), new Animation("Scale", sprite), draw_priority);
+        super(position, new Vector(1.3, 0.3),
+            new Animation("Scale", sprite), draw_priority,
+            function(){}, -1, [
+                new Collision_Box(new Vector(1.3, 0.1),
+                    new Vector(0.0, 0.2), [-1]),
+                new Collision_Box(new Vector(0.075, 0.3),
+                    new Vector(0.0, 0.0), [-1]),
+                new Collision_Box(new Vector(0.075, 0.3),
+                    new Vector(1.225, 0.0), [-1])
+            ]);
         // this.scoring_box = new Block(position.subtract(new Vector(0.0, SCALE_SCORING_BOX_SIZE.y)),
         //     SCALE_SCORING_BOX_SIZE);
 

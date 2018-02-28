@@ -28,8 +28,8 @@ class Renderable {
 	this.animation.update(delta_s);
     }
     display () {
-	if(this.should_display){
-	    this.animation.draw(this.position, this.size);
-	}
+	    if(this.should_display){
+	        this.animation.draw(this.position, this.size);
+	    }
     }
 }

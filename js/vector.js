@@ -20,4 +20,7 @@ class Vector {
             return this.scale(Math.sqrt(sum));
         }
     }
+    str () {
+        return "(" + this.x + ", " + this.y + ")";
+    }
 }

@@ -1,4 +1,3 @@
-const FORCE_DUE_TO_GRAVITY = 9.8;
 const COLLISION_BOX_STATE = {
     INTERSECTS: -1,
     LEFT: 1,
@@ -22,11 +21,6 @@ class Collision_Box {
         this.block_layers = block_layers;
 	    this.parent_position = new Vector(0.0, 0.0).add(this.offset);
     }
-    // draw () {
-    //     ctx.fillStyle = "#ffffff";
-	// 	ctx.fillRect(this.position.x*150, this.position.y*150,
-	// 	this.size.x*150,this.size.y*150);
-    // }
     get_position () {
         return this.parent_position.add(this.offset);
     }
@@ -65,6 +59,10 @@ class Collision_Box {
         this.block_layers = block_layers;
     }
     share_block_layer (box) {
+		if(this.block_layers.length == 0 ||
+			box.block_layers.length == 0){
+			return false;
+		}
 		for(var i = 0; i < this.block_layers.length; ++i){
             // For each block layer in this
             if(this.block_layers[i] == -1){

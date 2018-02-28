@@ -52,9 +52,9 @@ var exploration = {
 };
 var robot = new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
 				new Animation("Robot Anim", Sprite.red, [[0,0]], 1, -1),
-				6, 1, 
+				10, 1, 
 				[
-				  new Collision_Box(new Vector(1.0, 0.8), new Vector(0.0, 0.0), [-1])
+					new Collision_Box(new Vector(1.0, 0.8), new Vector(0.0, 0.0), [-1])
 				]);
 var ROBOT_MOVE_SPEED = 15.0 * robot.physics_state.mass;
 
@@ -81,7 +81,7 @@ exploration.scene.user_input.add_keyboard_event("t", "press", function(){
 	// tmp pick up power cube
 	for(var i = 0; i < cube_stack_id_list.length; ++i){
 		var cube_stack = exploration.scene.get_renderable_from_id(cube_stack_id_list[i]);
-		if(cube_stack.bounding_box.intersects(robot.bounding_box)){
+		if(cube_stack.physics_state.intersects(robot.physics_state)){
 			console.log("get cube");
 			var cube = new Power_Cube(new Vector(0.0, 0.0));
 			robot.pickup(cube);

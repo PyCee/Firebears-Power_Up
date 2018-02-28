@@ -2,39 +2,45 @@ class Actor extends Renderable {
 	constructor (position, size, animation, draw_priority=1,
 		ai_update=function(delta_s){}, mass=-1, collision_boxes=[]) {
 	super(position, size, animation, draw_priority);
-	// this.bounding_box = new Block(this.display_position, this.size); 
-
-	// The position attribute of this.collision_boxes is relative to this.position
-	// this.collision_boxes = collision_boxes;
-
 	this.physics_state = new Physics_State(position, mass, collision_boxes);
-	// this.block_layers = block_layers;
-	// this.last_position = position;
-	// this.acceleration = new Vector(0.0, 0.0);
-	// this.velocity = new Vector(0.0, 0.0);
-	// this.mass = mass;
 	this.ai_update = ai_update;
-	// this.friction_sources = [];
 	}
+	// display () {
+		// ctx.fillStyle = "#ffffff";
+		// var scale = 50;//1920 / curr_scene.inside_width;
+		// ctx.fillRect(this.position.x, this.position.y,
+		// 	this.size.x * scale, this.size.y * scale)
+		// ctx.fillRect(this.physics_state.last_position.x * scale,
+			// this.physics_state.last_position.y * scale,
+			// this.size.x * scale, this.size.y * scale)
+
+		// for(var i = 0; i < this.physics_state.collision_boxes.length; ++i){
+		// 	ctx.fillRect(this.physics_state.collision_boxes[i].get_position.x*scale,
+		// 		this.physics_state.collision_boxes[i].get_position().y*scale,
+		// 		this.physics_state.collision_boxes[i].size.x*scale,
+		// 		this.physics_state.collision_boxes[i].size.y*scale);
+		// }
+    // }
 	set_ai (fun) {
 		this.ai_update = fun;
 	}
+	set_ghost () {
+		for(var i = 0; i < this.physics_state.collision_boxes.length; ++i){
+			this.physics_state.collision_boxes[i].set_block_layers([]);
+		}
+	}
+	set_freeze () {
+		thsi.physics_state.freeze();
+	}
 	set_position (position) {
 		this.physics_state.set_position(position);
-		this.position = position;
+		this.position = this.physics_state.last_position;
 	}
 	set_absolute_position (position) {
 		this.physics_state.set_absolute_position(position);
-		this.position = position;
 	}
-	step_x () {
-		this.physics_state.step_x();
-		this.position.x = this.physics_state.position.x;
-	}
-	step_y () {
-		this.physics_state.step_x();
-		this.position.y = this.physics_state.position.y;
-	}
+	step_x () {this.physics_state.step_x();}
+	step_y () {this.physics_state.step_y();}
 	get_force () {return this.physics_state.get_force();}
 	impulse_force (force) {
 		this.physics_state.impulse_force(force);
@@ -57,6 +63,6 @@ class Actor extends Renderable {
 			physics_states.push(actors[i].physics_state);
 		}
 		this.physics_state.resolve_collisions(physics_states);
-		this.set_position(this.physics_state.position);
+		this.set_position(this.physics_state.last_position);
     }
 }

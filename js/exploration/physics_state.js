@@ -1,3 +1,5 @@
+const FORCE_DUE_TO_GRAVITY = 9.8;
+
 class Physics_State {
     constructor (position, mass=-1, collision_boxes=[]) {
         this.position = position;
@@ -7,34 +9,41 @@ class Physics_State {
 		this.mass = mass;
 		// List of all collision boxes this physics_state uses
 		this.collision_boxes = collision_boxes;
-		this.last_collision_boxes = collision_boxes;
 		this.update_collisison_boxes_parent_position();
         
         this.acceleration = new Vector(0.0, 0.0);
         this.velocity = new Vector(0.0, 0.0);
         this.friction_sources = [];
-    }
-	freeze () {
-		for(var i = 0; i < this.collision_boxes.length; ++i){
-			this.collision_boxes[i].freeze();
+	}
+	get_last_collision_box (box_index) {
+		if(box_index >= this.collision_boxes.length){
+			console.log("ERROR::Attempting to get box of index \'" + box_index + "/':out of range");
+			return null;
 		}
+		var last_box = new Collision_Box(this.collision_boxes[box_index].size,
+			this.collision_boxes[box_index].offset, 
+			this.collision_boxes[box_index].block_layers);
+		last_box.set_parent_position(this.last_position);
+		return last_box;
 	}
 	update_collisison_boxes_parent_position () {
 		for(var i = 0; i < this.collision_boxes.length; ++i){
-			this.last_collision_boxes[i] = this.collision_boxes[i];
 			this.collision_boxes[i].set_parent_position(this.position);
 		}
 	}
+	freeze () {
+		this.mass = -1;
+		this.acceleration = new Vector(0.0, 0.0);
+		this.velocity = new Vector(0.0, 0.0);
+	}
     set_position (position) {
 		this.position = position;
-		// this.last_position = this.position;
 		this.update_collisison_boxes_parent_position();
 	}
 	set_absolute_position (position) {
 		this.position = position;
 		this.last_position = position;
 		for(var i = 0; i < this.collision_boxes.length; ++i){
-			this.last_collision_boxes[i].set_parent_position(this.position);
 			this.collision_boxes[i].set_parent_position(this.position);
 		}
 	}
@@ -52,7 +61,7 @@ class Physics_State {
 		this.velocity.x = this.velocity.x + this.acceleration.x * PHYSICS.UPDATE_DELTA_S;
 		// console.log(this.acceleration.x);
 		// Apply friction
-		for(var i =0; i < this.friction_sources.length; ++i){
+		for(var i = 0; i < this.friction_sources.length; ++i){
 			var applied_frict = this.friction_sources[i].x * 0.10;
 			if(applied_frict * applied_frict > this.velocity.x * this.velocity.x){
                 // Square the compared values to compare positive magnitude
@@ -63,13 +72,14 @@ class Physics_State {
 		}
 		// Reset friction sources
 		this.friction_sources = [];
-		this.set_position(this.last_position.add(new Vector(this.velocity.x * PHYSICS.UPDATE_DELTA_S, 0.0)));
+		this.set_position(new Vector(this.last_position.x + this.velocity.x * PHYSICS.UPDATE_DELTA_S,
+			this.last_position.y));
 	}
 	step_y () {
 		if(!this.is_movable()){return;}
 		this.velocity.y = this.velocity.y +
 			(this.acceleration.y + FORCE_DUE_TO_GRAVITY) * PHYSICS.UPDATE_DELTA_S;
-		this.set_position(new Vector(this.get_position().x, 
+		this.set_position(new Vector(this.last_position.x, 
 			this.last_position.y + this.velocity.y * PHYSICS.UPDATE_DELTA_S));
     }
 	intersects (phsyics_state) {
@@ -99,58 +109,65 @@ class Physics_State {
             		if(!this_collision_box.share_block_layer(collision_box)){
 						// If the collision boxes don't share a collision layer
             		    continue;
-            		}
+					}
+					if(this_collision_box.intersects(physics_state.get_last_collision_box(k))){
+						should_update_last_position = false;
+					}
 					if(!this_collision_box.intersects(collision_box)){
 						// If this_collision_box and collision_box don't intersect
 						continue;
 					}
-
 					// Don't update last_position as it could conflict with other actors
 					should_update_last_position = false;
 
 					var total_momentum = this.get_momentum().add(physics_state.get_momentum());
 					var total_mass = this.mass + physics_state.mass;
 					var this_mass_per = 0.0;
-					var actor_mass_per = 0.0;
+					var physics_state_mass_per = 0.0;
 					if(physics_state.is_movable()){
 						this_mass_per = this.mass / total_mass;
 						physics_state_mass_per = physics_state.mass / total_mass;
 					}
 
-					var intersection_switch = collision_box.detect_positioning(this.last_collision_boxes[i]);
-					var orig_intersection_switch = intersection_switch;
+					var intersection_switch =
+						physics_state.get_last_collision_box(k).detect_positioning(this.get_last_collision_box(i));
+					var momentum_handle_switch = -1;
 					switch(intersection_switch){
 					case COLLISION_BOX_STATE.LEFT:
 						// Position this to the left of the collision_box
-						this.set_position(new Vector(collision_box.get_position().x - this.size.x, 
-							this.get_position().y));
-						intersection_switch = COLLISION_BOX_STATE.HORIZONTAL;
+						var new_x = collision_box.get_position().x - this_collision_box.size.x;
+						this.set_position(new Vector(-1.0 * this_collision_box.offset.x + new_x,
+							this.position.y));
+						momentum_handle_switch = COLLISION_BOX_STATE.HORIZONTAL;
 						break;
 					case COLLISION_BOX_STATE.RIGHT:
 						// Position this to the right of the collision_box
-						this.set_position(new Vector(collision_box.get_position().x + 
-							collision_box.size.x, this.get_position().y));
-						intersection_switch = COLLISION_BOX_STATE.HORIZONTAL;
+						var new_x = collision_box.get_position().x + collision_box.size.x;
+						this.set_position(new Vector(-1.0 * this_collision_box.offset.x + new_x,
+							this.position.y));
+						momentum_handle_switch = COLLISION_BOX_STATE.HORIZONTAL;
 						break;
 					case COLLISION_BOX_STATE.ABOVE:
 						// Position this above the collision_box
-						this.set_position(new Vector(this.get_position().x, 
-							collision_box.get_position().y - this.size.y));
-						intersection_switch = COLLISION_BOX_STATE.VERTICAL;
+						var new_y = collision_box.get_position().y - this_collision_box.size.y;
+						this.set_position(new Vector(this.position.x, -1.0 * this_collision_box.offset.y + new_y));
+						momentum_handle_switch = COLLISION_BOX_STATE.VERTICAL;
 						break;
 					case COLLISION_BOX_STATE.BELOW:
 						// Position this below the collision_box
-						this.set_position(new Vector(this.get_position().x, collision_box.get_position().y +
-							collision_box.size.y));
-						intersection_switch = COLLISION_BOX_STATE.VERTICAL;
+						var new_y = collision_box.get_position().y + collision_box.size.y;
+						this.set_position(new Vector(this.position.x, -1.0 * this_collision_box.offset.y + new_y));
+						momentum_handle_switch = COLLISION_BOX_STATE.VERTICAL;
 						break;
 					case COLLISION_BOX_STATE.INTERSECTS:
 					default:
 						console.log("physics_state.resolve_collisions intersection_switch not set correctly");
 						break;
 					}
-					switch(intersection_switch){
+					switch(momentum_handle_switch){
 					case COLLISION_BOX_STATE.HORIZONTAL:
+						// Add_Debug_String(total_momentum.str());
+						// Add_Debug_String(total_mass);
 						// Handle momentum on the x-axis
 						// Zero out momentum on the x-axis
 						this.impulse_momentum(new Vector(-1.0 * this.get_momentum().x, 0.0));
@@ -158,6 +175,7 @@ class Physics_State {
 						// Both physics_states get their share of x-axis momentum, based on mass
 						this.impulse_momentum(new Vector(total_momentum.x * this_mass_per, 0.0));
 						physics_state.impulse_momentum(new Vector(total_momentum.x * physics_state_mass_per, 0.0));
+						// Add_Debug_String(physics_state.velocity.str());
 						break;
 					case COLLISION_BOX_STATE.VERTICAL:
 						// Handle momentum on the y-axis
@@ -173,9 +191,9 @@ class Physics_State {
 					}
 					// Setup friction between the two physics_states
 					var frict_diff = this.velocity.subtract(physics_state.velocity);
-					if(orig_intersection_switch == COLLISION_BOX_STATE.ABOVE){
+					if(intersection_switch == COLLISION_BOX_STATE.ABOVE){
 						this.friction_sources.push(frict_diff);
-					} else if(orig_intersection_switch == COLLISION_BOX_STATE.BELOW){
+					} else if(intersection_switch == COLLISION_BOX_STATE.BELOW){
 						physics_state.friction_sources.push(frict_diff.scale(-1.0));
 					} else {
 						this.friction_sources.push(frict_diff);
@@ -183,21 +201,9 @@ class Physics_State {
 					}
 				}
 			}
-			for(var j = 0; j < physics_states.legnth; ++j){
-				for(var k = 0; k < physics_states[j].length; ++k){
-					if(this_collision_box.intersects(physics_states[j].last_collision_boxes[k])){
-						// Don't update last_position as it could conflict with other physics_states
-						should_update_last_position = false;
-					}
-				}
-			}
 		}
 		if(should_update_last_position){
-			console.log("updating last position");
-			this.last_position = this.position;
-			for(var i = 0; i < this.collision_boxes.length; ++i){
-				this.last_collision_boxes[i].set_parent_position(this.last_position);
-			}
+			this.set_absolute_position(this.position);
 		}
     }
 }
