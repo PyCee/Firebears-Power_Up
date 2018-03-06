@@ -33,6 +33,7 @@ class Switch_Component extends Actor {
         cube.set_absolute_position(this.position.add(cube_relative_position));
         cube.physics_state.freeze();
         cube.set_ghost();
+        cube.draw_priority = 1;
         this.cube_count++;
     }
 }
