@@ -27,6 +27,8 @@ var Arena = {
         Spinny.timer.reset();
         Spinny.timer.start();
         Viewport.set_update(arena_viewport_update);
+
+        // TODO: add timer callbacks to update score, every second
     }),
     ground: new Actor(new Vector(0.0, ARENA_HEIGHT - 0.5),
         new Vector(ARENA_WIDTH, 0.5), new Animation("Still Ground", Sprite.black),
@@ -49,8 +51,8 @@ var Arena = {
             new Collision_Box(new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))), 
                 new Vector(0.0, 0.0), [-1])
         ]),
-    l_switch: new Switch(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 3.2, ARENA_HEIGHT - (0.5 + 0.5)), 1),
-    r_switch: new Switch(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)), 1),
+    l_switch: new Switch(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 3.2, ARENA_HEIGHT - (0.5 + 0.5)), 2),
+    r_switch: new Switch(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)), 2),
     scale: new Scale(new Vector(ARENA_WIDTH/2 - 1.35, ARENA_HEIGHT - (0.5 + 2.5)), 8),
     cube_stack: new Cube_Stack(new Vector(0.4 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.66)), 1),
 };

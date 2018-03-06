@@ -6,42 +6,42 @@ var exploration = {
 	physics_time_accum = 0;
 	}, null,
 	function(delta_s){
-	// Update all actors
-	for(var i = 0; i < exploration.map.actors.length; ++i){
-		exploration.map.actors[i].ai_update(delta_s);
-	}
-	// Physics
-	physics_time_accum += delta_s;
-	while(physics_time_accum >= PHYSICS.UPDATE_DELTA_S){
-		// Step actor physics
+		// Update all actors
 		for(var i = 0; i < exploration.map.actors.length; ++i){
-			// Update horizontal positions
-			exploration.map.actors[i].physics_state.step_x(PHYSICS.UPDATE_DELTA_S);
+			exploration.map.actors[i].ai_update(delta_s);
 		}
-		for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
-			for(var j = 0; j < exploration.map.actors.length; ++j){
-				// Resolve collisions
-				exploration.map.actors[j].resolve_collisions(exploration.map.actors);
+		// Physics
+		physics_time_accum += delta_s;
+		while(physics_time_accum >= PHYSICS.UPDATE_DELTA_S){
+			// Step actor physics
+			for(var i = 0; i < exploration.map.actors.length; ++i){
+				// Update horizontal positions
+				exploration.map.actors[i].physics_state.step_x(PHYSICS.UPDATE_DELTA_S);
 			}
-		}
-		for(var i = 0; i < exploration.map.actors.length; ++i){
-			// Update vertical positions
-			exploration.map.actors[i].physics_state.step_y(PHYSICS.UPDATE_DELTA_S);
-		}
-		for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
-			for(var j = 0; j < exploration.map.actors.length; ++j){
-				// Resolve collisions
-				exploration.map.actors[j].resolve_collisions(exploration.map.actors);
+			for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
+				for(var j = 0; j < exploration.map.actors.length; ++j){
+					// Resolve collisions
+					exploration.map.actors[j].resolve_collisions(exploration.map.actors);
+				}
 			}
-		}
+			for(var i = 0; i < exploration.map.actors.length; ++i){
+				// Update vertical positions
+				exploration.map.actors[i].physics_state.step_y(PHYSICS.UPDATE_DELTA_S);
+			}
+			for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
+				for(var j = 0; j < exploration.map.actors.length; ++j){
+					// Resolve collisions
+					exploration.map.actors[j].resolve_collisions(exploration.map.actors);
+				}
+			}
+			
+	    	physics_time_accum -= PHYSICS.UPDATE_DELTA_S;
+		}	
+		//TODO: interpolate between the current and the next physics state
 		
-	    physics_time_accum -= PHYSICS.UPDATE_DELTA_S;
-	}
-	//TODO: interpolate between the current and the next physics state
-	
-	for(var i = 0; i < exploration.map.events.length; ++i){
-	    exploration.map.events[i].test();
-	}
+		for(var i = 0; i < exploration.map.events.length; ++i){
+		    exploration.map.events[i].test();
+		}
     }),
     set_map: function (map) {
 	exploration.map = map;
