@@ -29,7 +29,7 @@ class Scene {
 	//scene_scale = 1.0;
 	// Draw scene's renderables
 	if(this.background_actor != null){
-		this.background_actor.display(this.background_actor.display_position, this.background_actor.size);
+		// this.background_actor.display(this.background_actor.display_position, this.background_actor.size);
 	}
 	for(var i = 0; i < this.renderables_list.length; ++i){
 		this.renderables_list[i].display();

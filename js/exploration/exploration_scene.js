@@ -16,7 +16,7 @@ var exploration = {
 		// Step actor physics
 		for(var i = 0; i < exploration.map.actors.length; ++i){
 			// Update horizontal positions
-			exploration.map.actors[i].step_x();
+			exploration.map.actors[i].physics_state.step_x(PHYSICS.UPDATE_DELTA_S);
 		}
 		for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
 			for(var j = 0; j < exploration.map.actors.length; ++j){
@@ -26,7 +26,7 @@ var exploration = {
 		}
 		for(var i = 0; i < exploration.map.actors.length; ++i){
 			// Update vertical positions
-			exploration.map.actors[i].step_y();
+			exploration.map.actors[i].physics_state.step_y(PHYSICS.UPDATE_DELTA_S);
 		}
 		for(var i = 0; i < PHYSICS.ITERATIONS; ++i){
 			for(var j = 0; j < exploration.map.actors.length; ++j){

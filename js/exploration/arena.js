@@ -60,7 +60,7 @@ Arena.map.set_actors([
     Arena.r_driver_wall,
     Arena.l_driver_wall,
     robot,
-    // Spinny.robot,
+    Spinny.robot,
     Arena.l_switch.ally_side,
     Arena.l_switch.opp_side,
     Arena.r_switch.ally_side,

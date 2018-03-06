@@ -10,7 +10,7 @@ exploration.scene.show();
 function loop () {
     // Main game loop
 
-    Reset_Debug_String();
+    Reset_Temp_Debug_String();
 
     // Calculate duration of the last frame
     current_frame_time = window.performance.now();

@@ -8,6 +8,11 @@ main {
 canvas {
     background-color: hsla(135, 50%, 20%, 1.0);
 }
+#temp_debug_string {
+    display: inline;
+    color: #330000;
+    position: absolute;
+}
 #debug_string {
     display: inline;
     color: #330000;
