@@ -4,16 +4,36 @@ var Direction = {
 }
 var power_cube_id_list = [];
 const CUBE_LAUNCH_Y_VELOCITY = -7.0;
+const ALLIENCE = {
+    ALLY: "Ally",
+    OPPONENT: "Opponent",
+    NEITHER: "Neither"
+};
 
 class Robot extends Actor{
-    constructor (position, size, animation, draw_priority, mass, collision_boxes){
+    constructor (position, size, animation, draw_priority, mass, collision_boxes, allience=ALLIENCE.NEITHER){
         super(position, size, animation, draw_priority, function(){}, mass, collision_boxes);
         this.cube = null;
         this.facing = Direction.right;
+        this.allience = allience;
     }
     turn_right () {this.facing = Direction.right;}
     turn_left () {this.facing = Direction.left;}
-    pickup (cube) {this.cube = cube;}
+    pickup () {
+        if(this.cube != null){
+            return;
+        }
+        for(var i = 0; i < cube_stack_id_list.length; ++i){
+            var cube_stack = exploration.scene.get_renderable_from_id(cube_stack_id_list[i]);
+            if(cube_stack.physics_state.intersects(this.physics_state)){
+                console.log("get cube");
+                var cube = new Power_Cube(new Vector(0.0, 0.0));
+                this.cube = cube;
+            }
+        }
+    
+    
+    }
     has_cube () {return this.cube != null;}
     launch () {
         if(this.has_cube()){
@@ -41,7 +61,8 @@ class Robot extends Actor{
             for(var i = 0; i < switch_id_list.length; ++i){
                 // For each switch
                 var sw = exploration.scene.get_renderable_from_id(switch_id_list[i]);
-                if(this.physics_state.intersects(sw.physics_state)){
+                if(this.physics_state.intersects(sw.physics_state) &&
+                    this.allience === sw.allience){
                     // If the robot and switch intersect
                     sw.add_cube(this.cube);
                     exploration.scene.add_renderable(this.cube);

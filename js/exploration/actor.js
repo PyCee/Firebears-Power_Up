@@ -5,13 +5,6 @@ class Actor extends Renderable {
 	this.physics_state = new Physics_State(position, mass, collision_boxes);
 	this.ai_update = ai_update;
 	}
-	// display () { // Uncomment to display last position boxes
-	// 	ctx.fillStyle = "#ffffff";
-	// 	var scale = 50;//1920 / curr_scene.inside_width;
-	// 	ctx.fillRect(this.physics_state.last_position.x * scale,
-	// 		this.physics_state.last_position.y * scale,
-	// 		this.size.x * scale, this.size.y * scale)
-    // }
 	set_ai (fun) {
 		this.ai_update = fun;
 	}

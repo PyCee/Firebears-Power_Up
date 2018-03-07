@@ -17,17 +17,20 @@ class Timeline {
     stop () {this.active = false;}
     set (time) {this.elapsed_time = time;}
     reset () {
-	this.set(0.0);
+        this.set(0.0);
+        for(var i = 0; i < this.timers.length; ++i){
+            this.timers[i].reset();
+        }
     }
     update (delta_s) {
-	if(this.active){
-	    this.elapsed_time += delta_s;
-	    for(var i = 0; i < this.timers.length; ++i){
-		this.timers[i].test();
+	    if(this.active){
+	        this.elapsed_time += delta_s;
+	        for(var i = 0; i < this.timers.length; ++i){
+		    this.timers[i].test();
+	        }
 	    }
-	}
     }
     add_event (time, callback) {
-	this.timers.push(new Timer(time, callback, this));
+	    this.timers.push(new Timer(time, callback, this));
     }
 }

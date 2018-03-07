@@ -1,9 +1,9 @@
 var Spinny = {
     robot: new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.3),
-                new Animation("Spinny Anim", Sprite.red), 2, 1, [
+                new Animation("Spinny Anim", Sprite.red), 4, 1, [
                     new Collision_Box(new Vector(1.0, 0.3),
                         new Vector(0.0, 0.0), [-1])
-                ]),
+                ], ALLIENCE.OPPONENT),
     speed: 0.4,
     timer: new Timeline(false),
     curr_spin_duration: Math.random() * 3.0,
@@ -28,6 +28,12 @@ function spinny_ai () {
     case 1:
         Spinny.robot.impulse_force(new Vector(-move_speed, 0.0));
         break;
+    }
+
+    Spinny.robot.pickup();
+    if(Spinny.robot.physics_state.intersects(Arena.r_switch.opp_side.physics_state)){
+        Spinny.robot.place();
+        console.log("attempting spinny place");
     }
 }
 Spinny.robot.set_ai(spinny_ai);

@@ -28,7 +28,7 @@ var Arena = {
         Spinny.timer.start();
         Viewport.set_update(arena_viewport_update);
 
-        // TODO: add timer callbacks to update score, every second
+        Arena.score_timeline.start();
     }),
     ground: new Actor(new Vector(0.0, ARENA_HEIGHT - 0.5),
         new Vector(ARENA_WIDTH, 0.5), new Animation("Still Ground", Sprite.black),
@@ -54,8 +54,16 @@ var Arena = {
     l_switch: new Switch(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 3.2, ARENA_HEIGHT - (0.5 + 0.5)), 2),
     r_switch: new Switch(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)), 2),
     scale: new Scale(new Vector(ARENA_WIDTH/2 - 1.35, ARENA_HEIGHT - (0.5 + 2.5)), 8),
-    cube_stack: new Cube_Stack(new Vector(0.4 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.66)), 1),
+    l_cube_stack: new Cube_Stack(new Vector(0.4 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.66)), 1),
+    r_cube_stack: new Cube_Stack(new Vector(RIGHT_WALL - 1.4, ARENA_HEIGHT - (0.5 + 0.66)), 1),
+    score_timeline: new Timeline(false)
 };
+
+Arena.score_timeline.add_event(1.0, function(){
+    Arena.score_timeline.reset();
+    // console.log("l switch belongs to " + Arena.l_switch.get_ownership());
+    // TODO: add to match score for each goal pair based on goal.get_ownership()
+});
 
 Arena.map.set_actors([
     Arena.ground,
@@ -69,5 +77,6 @@ Arena.map.set_actors([
     Arena.r_switch.opp_side,
     Arena.scale.ally_side,
     Arena.scale.opp_side,
-    Arena.cube_stack
+    Arena.l_cube_stack,
+    Arena.r_cube_stack
     ]);

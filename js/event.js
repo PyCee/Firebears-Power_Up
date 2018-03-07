@@ -13,7 +13,10 @@ class Event {
 		this.trigger_callback();
 	    }
 	}
-    }
+	}
+	reset () {
+		this.triggered_count = 0;
+	}
 }
 class Timer extends Event {
     // An event that will trigger once test is called

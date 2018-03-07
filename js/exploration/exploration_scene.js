@@ -52,10 +52,10 @@ var exploration = {
 };
 var robot = new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
 				new Animation("Robot Anim", Sprite.red, [[0,0]], 1, -1),
-				10, 1, 
+				4, 1, 
 				[
 					new Collision_Box(new Vector(1.0, 0.8), new Vector(0.0, 0.0), [-1])
-				]);
+				], ALLIENCE.ALLY);
 var ROBOT_MOVE_SPEED = 15.0 * robot.physics_state.mass;
 
 // Add basic control for exploration
@@ -79,17 +79,15 @@ exploration.scene.user_input.add_keyboard_event("q", "press", function(){
 });
 exploration.scene.user_input.add_keyboard_event("t", "press", function(){
 	// tmp pick up power cube
-	for(var i = 0; i < cube_stack_id_list.length; ++i){
-		var cube_stack = exploration.scene.get_renderable_from_id(cube_stack_id_list[i]);
-		if(cube_stack.physics_state.intersects(robot.physics_state)){
-			console.log("get cube");
-			var cube = new Power_Cube(new Vector(0.0, 0.0));
-			robot.pickup(cube);
-		}
-	}
-	// var p_cu = new Power_Cube(new Vector(0.0, 0.0));
-	// // exploration.scene.add_renderable(p_cu);
-	// robot.pickup(p_cu);
+	robot.pickup();
+	// for(var i = 0; i < cube_stack_id_list.length; ++i){
+	// 	var cube_stack = exploration.scene.get_renderable_from_id(cube_stack_id_list[i]);
+	// 	if(cube_stack.physics_state.intersects(robot.physics_state)){
+	// 		console.log("get cube");
+	// 		var cube = new Power_Cube(new Vector(0.0, 0.0));
+	// 		robot.pickup(cube);
+	// 	}
+	// }
 });
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){
 	robot.launch();
