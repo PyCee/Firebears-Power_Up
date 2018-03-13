@@ -17,6 +17,7 @@ function spinny_ai () {
         Spinny.timer.reset();
         Spinny.curr_spin_duration = Math.random() * 3.0;
         Spinny.spin_state = Math.abs(Spinny.spin_state - 1);
+        Spinny.robot.impulse_force(Spinny.robot.get_force().scale(-1));
     }
     if(Spinny.timer.get_elapsed_time() > 0.5 * Spinny.curr_spin_duration){
         move_speed *= -1.0;

@@ -248,8 +248,6 @@ class Physics_State {
 		}
 		if(update_last_position){
 			this.set_absolute_position(this.position);
-		} else {
-			this.set_position(this.last_position);
 		}
 	}
 }
