@@ -21,6 +21,7 @@ class Actor extends Renderable {
 		this.position = this.physics_state.position;
 	}
 	set_absolute_position (position) {
+		this.set_position(position);
 		this.physics_state.set_absolute_position(position);
 	}
 	get_force () {return this.physics_state.get_force();}

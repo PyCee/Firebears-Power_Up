@@ -21,7 +21,7 @@ class Collision_Box {
 	    //   An empty block layer list = Will not collide with anything
         this.block_layers = block_layers;
 	    this.parent_position = parent_position;
-    }
+	}
     get_position () {
         return this.parent_position.add(this.offset);
     }

@@ -55,7 +55,7 @@ var robot = new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
 				4, 10, 
 				[
 					new Collision_Box(new Vector(1.0, 0.8), new Vector(0.0, 0.0), [-1])
-				], ALLIENCE.ALLY);
+				], ALLIENCE_TYPE.BLUE);
 var ROBOT_MOVE_SPEED = 15.0 * robot.physics_state.mass;
 
 // Add basic control for exploration

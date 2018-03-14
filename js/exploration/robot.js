@@ -4,15 +4,12 @@ var Direction = {
 }
 var power_cube_id_list = [];
 const CUBE_LAUNCH_Y_VELOCITY = -7.0;
-const ALLIENCE = {
-    ALLY: "Ally",
-    OPPONENT: "Opponent",
-    NEITHER: "Neither"
-};
 
 class Robot extends Actor{
-    constructor (position, size, animation, draw_priority, mass, collision_boxes, allience=ALLIENCE.NEITHER){
-        super(position, size, animation, draw_priority, function(){}, mass, collision_boxes);
+    constructor (position, size, animation, draw_priority, mass,
+            collision_boxes, allience=ALLIENCE_TYPE.NEITHER){
+        super(position, size, animation, draw_priority,
+            function(){}, mass, collision_boxes);
         this.cube = null;
         this.facing = Direction.right;
         this.allience = allience;
@@ -26,13 +23,11 @@ class Robot extends Actor{
         for(var i = 0; i < cube_stack_id_list.length; ++i){
             var cube_stack = exploration.scene.get_renderable_from_id(cube_stack_id_list[i]);
             if(cube_stack.physics_state.intersects(this.physics_state)){
-                console.log("get cube");
+                // change animation to indicate the robot has a cube
                 var cube = new Power_Cube(new Vector(0.0, 0.0));
                 this.cube = cube;
             }
         }
-    
-    
     }
     has_cube () {return this.cube != null;}
     launch () {

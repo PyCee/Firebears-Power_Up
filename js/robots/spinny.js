@@ -3,7 +3,7 @@ var Spinny = {
                 new Animation("Spinny Anim", Sprite.red), 4, 1, [
                     new Collision_Box(new Vector(1.0, 0.3),
                         new Vector(0.0, 0.0), [-1])
-                ], ALLIENCE.OPPONENT),
+                ], ALLIENCE_TYPE.RED),
     speed: 0.4,
     timer: new Timeline(false),
     curr_spin_duration: Math.random() * 3.0,
@@ -32,9 +32,9 @@ function spinny_ai () {
     }
 
     Spinny.robot.pickup();
-    if(Spinny.robot.physics_state.intersects(Arena.r_switch.opp_side.physics_state)){
+    if(Spinny.robot.physics_state.intersects(Arena.r_switch.red_component.physics_state) ||
+        Spinny.robot.physics_state.intersects(Arena.l_switch.red_component.physics_state)){
         Spinny.robot.place();
-        console.log("attempting spinny place");
     }
 }
 Spinny.robot.set_ai(spinny_ai);

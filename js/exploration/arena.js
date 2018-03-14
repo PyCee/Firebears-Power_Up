@@ -51,18 +51,38 @@ var Arena = {
             new Collision_Box(new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))), 
                 new Vector(0.0, 0.0), [-1])
         ]),
-    l_switch: new Switch(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 3.2, ARENA_HEIGHT - (0.5 + 0.5)), 2),
-    r_switch: new Switch(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)), 2),
-    scale: new Scale(new Vector(ARENA_WIDTH/2 - 1.35, ARENA_HEIGHT - (0.5 + 2.5)), 8),
+    scale: new Goal_Pair(new Vector(ARENA_WIDTH/2 - 1.55, ARENA_HEIGHT - (0.5 + 2.5)),
+        8, GOAL_COMPONENT.TYPE.SCALE),
+    l_switch: new Goal_Pair(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 3.2, ARENA_HEIGHT - (0.5 + 0.5)),
+        1, GOAL_COMPONENT.TYPE.SWITCH),
+    r_switch: new Goal_Pair(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)),
+        1, GOAL_COMPONENT.TYPE.SWITCH),
     l_cube_stack: new Cube_Stack(new Vector(0.4 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.66)), 1),
     r_cube_stack: new Cube_Stack(new Vector(RIGHT_WALL - 1.4, ARENA_HEIGHT - (0.5 + 0.66)), 1),
     score_timeline: new Timeline(false)
 };
 
+var b_p = 0,
+    r_p = 0;
+function update_score_with_ownership (ownership) {
+    switch(ownership){
+    case ALLIENCE_TYPE.BLUE:
+        b_p = b_p + 1;
+        break;
+    case ALLIENCE_TYPE.RED:
+        r_p = r_p + 1;
+        break;
+    default:
+        break;
+    }
+}
 Arena.score_timeline.add_event(1.0, function(){
     Arena.score_timeline.reset();
-    // console.log("l switch belongs to " + Arena.l_switch.get_ownership());
     // TODO: add to match score for each goal pair based on goal.get_ownership()
+    update_score_with_ownership(Arena.l_switch.get_ownership());
+    update_score_with_ownership(Arena.r_switch.get_ownership());
+    update_score_with_ownership(Arena.scale.get_ownership());
+    console.log(b_p + " : " + r_p);
 });
 
 Arena.map.set_actors([
@@ -71,12 +91,12 @@ Arena.map.set_actors([
     Arena.l_driver_wall,
     robot,
     Spinny.robot,
-    Arena.l_switch.ally_side,
-    Arena.l_switch.opp_side,
-    Arena.r_switch.ally_side,
-    Arena.r_switch.opp_side,
-    Arena.scale.ally_side,
-    Arena.scale.opp_side,
+    Arena.scale.blue_component,
+    Arena.scale.red_component,
+    Arena.l_switch.blue_component,
+    Arena.l_switch.red_component,
+    Arena.r_switch.blue_component,
+    Arena.r_switch.red_component,
     Arena.l_cube_stack,
     Arena.r_cube_stack
     ]);

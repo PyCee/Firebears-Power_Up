@@ -12,17 +12,14 @@ function Get_Next_Cube_Offset (cube_index) {
         return new Vector(0.60, -0.295 - (0.32 * (cube_index - 4)));
     }
 }
-
 var switch_id_list = [];
-class Switch_Component extends Actor {
-    constructor (position, draw_priority, sprite, allience) {
-        super(position, new Vector(1.5, 0.5),
-            new Animation("Switch", sprite), draw_priority,
-            function(){}, -1, [
-                new Collision_Box(new Vector(1.5, 0.5),
-                    new Vector(0.0, 0.0), [])
-            ]);
-        this.allience = allience;
+class Switch_Component extends Goal {
+    constructor (position, draw_priority, allience) {
+        super(position, draw_priority, allience, 
+                [
+                    new Collision_Box(new Vector(1.5, 0.5),
+                        new Vector(0.0, 0.0), [])
+                ]);
         this.cube_count = 0;
         switch_id_list.push(this.id);
     }
@@ -37,28 +34,4 @@ class Switch_Component extends Actor {
         cube.draw_priority = 1;
         this.cube_count++;
     }
-}
-const SECOND_SWITCH_OFFSET = new Vector(1.6, 0.0);
-class Switch {
-    constructor (position, draw_priority) {
-        this.ally_side = new Switch_Component(position, draw_priority, Sprite.blue_scale, ALLIENCE.ALLY);
-        this.opp_side = new Switch_Component(position, draw_priority, Sprite.red_scale, ALLIENCE.OPPONENT);
-        var own_left = Math.floor(Math.random() * 2);
-        if(own_left){
-            this.opp_side.set_absolute_position(this.opp_side.position.add(SECOND_SWITCH_OFFSET));
-        } else {
-            this.ally_side.set_absolute_position(this.ally_side.position.add(SECOND_SWITCH_OFFSET));
-        }
-    }
-    get_ownership () {
-        // Returns which side has more cubes
-        if(this.ally_side.get_cube_count() > this.opp_side.get_cube_count()){
-            return ALLIENCE.ALLY;
-        } else if (this.ally_side.get_cube_count() < this.opp_side.get_cube_count()){
-            return ALLIENCE.OPPONENT;
-        } else {
-            return ALLIENCE.NEITHER;
-        }
-    }
-
 }
