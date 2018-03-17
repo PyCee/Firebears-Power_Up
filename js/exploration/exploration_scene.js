@@ -80,14 +80,6 @@ exploration.scene.user_input.add_keyboard_event("q", "press", function(){
 exploration.scene.user_input.add_keyboard_event("t", "press", function(){
 	// tmp pick up power cube
 	robot.pickup();
-	// for(var i = 0; i < cube_stack_id_list.length; ++i){
-	// 	var cube_stack = exploration.scene.get_renderable_from_id(cube_stack_id_list[i]);
-	// 	if(cube_stack.physics_state.intersects(robot.physics_state)){
-	// 		console.log("get cube");
-	// 		var cube = new Power_Cube(new Vector(0.0, 0.0));
-	// 		robot.pickup(cube);
-	// 	}
-	// }
 });
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){
 	robot.launch();
