@@ -16,10 +16,14 @@ class Map {
 	exploration.scene.background_actor = this.background_actor;
 	
 	// Reset variables for use in next map
-	exploration.scene.set_renderables(this.actors);
+	var tmp_actors = this.actors.slice(0);
+	exploration.scene.set_renderables(tmp_actors);
 	exploration.set_map(this);
 	this.map_callback();
-    }
+	}
+	add_actor (actor) {
+		this.actors.push(actor);
+	}
     set_actors (actors) {
 	this.actors = actors;
     }

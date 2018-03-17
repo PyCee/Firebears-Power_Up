@@ -43,13 +43,23 @@ class Scene {
 	curr_scene = this;
 	this.user_input.bind();
 	this.show_callback();
-    }
-    set_renderables (renderables_list) {
-		this.renderables_list = renderables_list;
+	}
+	sort_renderables () {
 		// Sort renerables_list so painters algorithm will draw according to priority
 		this.renderables_list.sort(function(ren_1, ren_2){
 			return ren_1.draw_priority - ren_2.draw_priority;
 		});
+	}
+    set_renderables (renderables_list) {
+		// Use .slice() to clone the array
+		this.renderables_list = renderables_list.slice();
+		// this.renderables_list = renderables_list;
+		// var tmp_renderables = [];
+		// for(var i = 0; i < renderables_list.length; ++i){
+		// 	tmp_renderables[i] = renderables_list[i];
+		// }
+		// this.renderables_list = tmp_renderables;
+		this.sort_renderables();
 	}
 	get_renderable_from_id(id){
 		for(var i = 0; i < this.renderables_list.length; ++i){
@@ -60,9 +70,9 @@ class Scene {
 		return null;
 	}
     add_renderable (renderable) {
-		var tmp_renderables = this.renderables_list;
-		tmp_renderables.push(renderable);
-		this.set_renderables(tmp_renderables);
+		this.renderables_list.push(renderable);
+		this.sort_renderables();
+		// this.set_renderables(this.renderables_list);
     }
     remove_renderable (renderable) {
 	var index = this.renderables_list.indexOf(renderable);

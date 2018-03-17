@@ -45,6 +45,7 @@ class Robot extends Actor{
                 break;
             }
             exploration.scene.add_renderable(this.cube);
+            Arena.map.add_actor(this.cube);
             this.cube = null;
         } else {
             console.log("attempting to shoot with no cube");
