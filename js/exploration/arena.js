@@ -20,6 +20,10 @@ function arena_viewport_update () {
 }
 
 var Arena = {
+    scoring: {
+        blue: 0,
+        red: 0
+    },
     map: new Map(ARENA_WIDTH, new Actor(new Vector(0.0, 0.0), new Vector(ARENA_WIDTH, ARENA_HEIGHT),
         new Animation("Arena Background", Sprite.arena_background)), function(){
         Spinny.robot.set_absolute_position(new Vector(14.0 + DISTANCE_BEHIND_DRIVER_WALLS,
@@ -29,6 +33,9 @@ var Arena = {
         Viewport.set_update(arena_viewport_update);
 
         Arena.score_timeline.start();
+
+        Arena.scoring.blue = 0;
+        Arena.scoring.red = 0;
     }),
     ground: new Actor(new Vector(0.0, ARENA_HEIGHT - 0.5),
         new Vector(ARENA_WIDTH, 0.5), new Animation("Still Ground", Sprite.black),
@@ -62,27 +69,41 @@ var Arena = {
     score_timeline: new Timeline(false)
 };
 
-var b_p = 0,
-    r_p = 0;
-function update_score_with_ownership (ownership) {
-    switch(ownership){
+function update_score_with_ownership (goal_pair) {
+    var text_rise_duration = 3.0;
+    var score_ind = null;
+    switch(goal_pair.get_ownership()){
     case ALLIENCE_TYPE.BLUE:
-        b_p = b_p + 1;
+        Arena.scoring.blue = Arena.scoring.blue + 1;
+        score_ind = new Text(goal_pair.blue_component.position.add(new Vector(0.4, -0.6)),
+            0.5, "+1", "#0000ff");
         break;
     case ALLIENCE_TYPE.RED:
-        r_p = r_p + 1;
+        Arena.scoring.red = Arena.scoring.red + 1;
+        score_ind = new Text(goal_pair.red_component.position.add(new Vector(0.4, -0.6)),
+            0.5, "+1", "#ff0000");
         break;
     default:
         break;
     }
+    if(score_ind != null){
+        var id = score_ind.id;
+        exploration.scene.add_renderable(score_ind);
+        var point_float_sequence = new Sequence();
+        point_float_sequence.add_lerp(new Lerp(0.0, text_rise_duration, new Vector(0.0, 2.2),
+                                 [score_ind]));
+        point_float_sequence.add_event(text_rise_duration, function(){
+            exploration.scene.remove_renderable_id(id);
+        });
+        point_float_sequence.start();
+    }
 }
 Arena.score_timeline.add_event(1.0, function(){
     Arena.score_timeline.reset();
-    // TODO: add to match score for each goal pair based on goal.get_ownership()
-    update_score_with_ownership(Arena.l_switch.get_ownership());
-    update_score_with_ownership(Arena.r_switch.get_ownership());
-    update_score_with_ownership(Arena.scale.get_ownership());
-    console.log(b_p + " : " + r_p);
+    update_score_with_ownership(Arena.l_switch);
+    update_score_with_ownership(Arena.r_switch);
+    update_score_with_ownership(Arena.scale);
+    console.log(Arena.scoring.blue + " : " + Arena.scoring.red);
 });
 
 Arena.map.set_actors([
