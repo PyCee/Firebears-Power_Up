@@ -4,6 +4,10 @@ var Viewport = {
     update_function: null,
     set_update: function (update_function=null) {
         Viewport.update_function = update_function;
+    },
+    get_scale: function () {
+        return new Vector(curr_scene.inside_dimensions.x / Viewport.size.x,
+            curr_scene.inside_dimensions.y / Viewport.size.y);
     }
 };
 function Update_Viewport () {
@@ -13,8 +17,9 @@ function Update_Viewport () {
         console.log("No Viewport.update_function set");
     }
 
-    var scale = new Vector(curr_scene.inside_width / Viewport.size.x,
-        curr_scene.inside_width * canvas_dimensions.aspect_ratio.multiplier / Viewport.size.y);
+    // var scale = new Vector(curr_scene.inside_dimensions.x / Viewport.size.x,
+    //     curr_scene.inside_dimensions.y / Viewport.size.y);
+    var scale = Viewport.get_scale();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.translate(Viewport.offset.x * scale.x, -1.0 * Viewport.offset.y * scale.y);
     ctx.scale(scale.x, scale.y);

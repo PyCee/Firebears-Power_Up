@@ -16,7 +16,7 @@ function arena_viewport_update () {
 
     Viewport.offset.x = offset.x;
     Viewport.offset.y = offset.y + (ARENA_HEIGHT * 0.5);
-    Viewport.offset = Viewport.offset.scale(canvas.width / curr_scene.inside_width);
+    Viewport.offset = Viewport.offset.scale(canvas.width / curr_scene.inside_dimensions.x);
 }
 
 var Arena = {
@@ -34,9 +34,14 @@ var Arena = {
 
         Arena.score_timeline.start();
 
+        exploration.scene.add_renderable(Arena.blue_score);
+        exploration.scene.add_renderable(Arena.red_score);
+
         Arena.scoring.blue = 0;
         Arena.scoring.red = 0;
     }),
+    blue_score: new Screen_Text(new Vector(0.05, 0.1), 2.0, "0", "#0000ff"),
+    red_score: new Screen_Text(new Vector(0.75, 0.1), 2.0, "0", "#ff0000"),
     ground: new Actor(new Vector(0.0, ARENA_HEIGHT - 0.5),
         new Vector(ARENA_WIDTH, 0.5), new Animation("Still Ground", Sprite.black),
         1, function(){}, -1,
@@ -61,9 +66,9 @@ var Arena = {
     scale: new Goal_Pair(new Vector(ARENA_WIDTH/2 - 1.55, ARENA_HEIGHT - (0.5 + 2.5)),
         8, GOAL_COMPONENT.TYPE.SCALE),
     l_switch: new Goal_Pair(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 3.2, ARENA_HEIGHT - (0.5 + 0.5)),
-        1, GOAL_COMPONENT.TYPE.SWITCH),
+        2, GOAL_COMPONENT.TYPE.SWITCH),
     r_switch: new Goal_Pair(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)),
-        1, GOAL_COMPONENT.TYPE.SWITCH),
+        2, GOAL_COMPONENT.TYPE.SWITCH),
     l_cube_stack: new Cube_Stack(new Vector(0.4 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.66)), 1),
     r_cube_stack: new Cube_Stack(new Vector(RIGHT_WALL - 1.4, ARENA_HEIGHT - (0.5 + 0.66)), 1),
     score_timeline: new Timeline(false)
@@ -75,12 +80,12 @@ function update_score_with_ownership (goal_pair) {
     switch(goal_pair.get_ownership()){
     case ALLIENCE_TYPE.BLUE:
         Arena.scoring.blue = Arena.scoring.blue + 1;
-        score_ind = new Text(goal_pair.blue_component.position.add(new Vector(0.4, -0.6)),
+        score_ind = new World_Text(goal_pair.blue_component.position.add(new Vector(0.4, -0.6)),
             0.5, "+1", "#0000ff");
         break;
     case ALLIENCE_TYPE.RED:
         Arena.scoring.red = Arena.scoring.red + 1;
-        score_ind = new Text(goal_pair.red_component.position.add(new Vector(0.4, -0.6)),
+        score_ind = new World_Text(goal_pair.red_component.position.add(new Vector(0.4, -0.6)),
             0.5, "+1", "#ff0000");
         break;
     default:
@@ -103,7 +108,8 @@ Arena.score_timeline.add_event(1.0, function(){
     update_score_with_ownership(Arena.l_switch);
     update_score_with_ownership(Arena.r_switch);
     update_score_with_ownership(Arena.scale);
-    console.log(Arena.scoring.blue + " : " + Arena.scoring.red);
+    Arena.blue_score.set_text(Arena.scoring.blue);
+    Arena.red_score.set_text(Arena.scoring.red);
 });
 
 Arena.map.set_actors([
