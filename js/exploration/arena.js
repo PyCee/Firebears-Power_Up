@@ -76,6 +76,7 @@ var Arena = {
 
 function update_score_with_ownership (goal_pair) {
     var text_rise_duration = 3.0;
+    var text_rise_position = new Vector(0.0, 2.2);
     var score_ind = null;
     switch(goal_pair.get_ownership()){
     case ALLIENCE_TYPE.BLUE:
@@ -95,7 +96,7 @@ function update_score_with_ownership (goal_pair) {
         var id = score_ind.id;
         exploration.scene.add_renderable(score_ind);
         var point_float_sequence = new Sequence();
-        point_float_sequence.add_lerp(new Lerp(0.0, text_rise_duration, new Vector(0.0, 2.2),
+        point_float_sequence.add_lerp(new Lerp(0.0, text_rise_duration, text_rise_position,
                                  [score_ind]));
         point_float_sequence.add_event(text_rise_duration, function(){
             exploration.scene.remove_renderable_id(id);

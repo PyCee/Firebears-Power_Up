@@ -1,9 +1,9 @@
 class Actor extends Renderable {
 	constructor (position, size, animation, draw_priority=1,
 		ai_update=function(delta_s){}, mass=-1, collision_boxes=[]) {
-	super(position, size, animation, draw_priority);
-	this.physics_state = new Physics_State(position, mass, collision_boxes);
-	this.ai_update = ai_update;
+		super(position, size, animation, draw_priority);
+		this.physics_state = new Physics_State(position, mass, collision_boxes);
+		this.ai_update = ai_update;
 	}
 	set_ai (fun) {
 		this.ai_update = fun;
@@ -43,6 +43,6 @@ class Actor extends Renderable {
 			physics_states.push(actors[i].physics_state);
 		}
 		this.physics_state.resolve_collisions(physics_states);
-		this.set_position(this.physics_state.position);
+		this.position = this.physics_state.position;
     }
 }
