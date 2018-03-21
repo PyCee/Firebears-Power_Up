@@ -2,7 +2,7 @@ class Actor extends Renderable {
 	constructor (position, size, animation, draw_priority=1,
 		ai_update=function(delta_s){}, mass=-1, collision_boxes=[]) {
 		super(position, size, animation, draw_priority);
-		this.physics_state = new Physics_State(position, mass, collision_boxes);
+		this.physics_state = new Physics_State(position, mass, collision_boxes, this.id);
 		this.ai_update = ai_update;
 	}
 	set_ai (fun) {
@@ -35,11 +35,6 @@ class Actor extends Renderable {
 	resolve_collisions (actors) {
 		var physics_states = [];
 		for(var i = 0; i < actors.length; ++i){
-			if(this.id == actors[i].id){
-				// If this and the current actor are the same
-				//   Don't test, are you crazy?
-				continue;
-			}
 			physics_states.push(actors[i].physics_state);
 		}
 		this.physics_state.resolve_collisions(physics_states);

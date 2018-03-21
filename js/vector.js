@@ -4,20 +4,23 @@ class Vector {
 	this.y = y;
     }
     add (vector) {
-	return new Vector(this.x + vector.x, this.y + vector.y);
+	    return new Vector(this.x + vector.x, this.y + vector.y);
     }
     subtract (vector) {
-	return new Vector(this.x - vector.x, this.y - vector.y);
+	    return new Vector(this.x - vector.x, this.y - vector.y);
     }
     scale (scalar) {
-	return new Vector(this.x * scalar, this.y * scalar);
+	    return new Vector(this.x * scalar, this.y * scalar);
+    }
+    dot (vector) {
+        return this.x * vector.x + this.y * vector.y;
     }
     normalize () {
-        var sum = vector.x * vector.x + vector.y * vector.y;
-        if(sum == 0.0){
+        var magnitude = this.dot(this);
+        if(magnitude == 0.0){
             return this;
         } else {
-            return this.scale(Math.sqrt(sum));
+            return this.scale(Math.sqrt(magnitude));
         }
     }
     str () {

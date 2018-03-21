@@ -49,10 +49,22 @@ class Collision_Box {
 		    // If box is below this
 		    box_state = COLLISION_BOX_STATE.BELOW;
 		} else {
-		    console.log("intersection detection failed: likely undefined variables");
+		    Add_Debug_String("intersection detection failed: likely undefined variables");
 		}
 		return box_state;
-    }
+	}
+	detect_general_positioning (box) {
+		var positioning = this.detect_positioning(box);
+		if(positioning == COLLISION_BOX_STATE.LEFT ||
+			positioning == COLLISION_BOX_STATE.RIGHT){
+			return COLLISION_BOX_STATE.HORIZONTAL;
+		} else if(positioning == COLLISION_BOX_STATE.ABOVE ||
+			positioning == COLLISION_BOX_STATE.BELOW){
+			return COLLISION_BOX_STATE.VERTICAL;
+		} else {
+			return positioning;
+		}
+	}
     set_parent_position (parent_position) {
         this.parent_position = parent_position;
     }

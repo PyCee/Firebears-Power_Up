@@ -1,7 +1,7 @@
 const FORCE_DUE_TO_GRAVITY = 9.8;
 
 class Physics_State {
-    constructor (position, mass=-1, collision_boxes=[]) {
+    constructor (position, mass=-1, collision_boxes=[], parent_id=-1) {
         this.position = position;
         this.last_position = this.position;
         // Physics states's mass in (units)
@@ -10,10 +10,12 @@ class Physics_State {
 		// List of all collision boxes this physics_state uses
 		this.collision_boxes = collision_boxes;
 		this.update_collisison_boxes_parent_position();
+
+		this.parent_id = parent_id;
         
         this.acceleration = new Vector(0.0, 0.0);
         this.velocity = new Vector(0.0, 0.0);
-        this.friction_sources = [];
+		this.friction_sources = [];
 	}
 	get_collision_box (box_index) {
 		if(box_index >= this.collision_boxes.length){
@@ -31,7 +33,6 @@ class Physics_State {
 			this.get_collision_box(box_index).offset, 
 			this.get_collision_box(box_index).block_layers,
 			this.last_position);
-		// last_box.set_parent_position(this.last_position);
 		return last_box;
 	}
 	update_collisison_boxes_parent_position () {
@@ -66,7 +67,9 @@ class Physics_State {
 		this.velocity.x = this.velocity.x + this.acceleration.x * delta_s;
 		// Apply friction
 		for(var i = 0; i < this.friction_sources.length; ++i){
-			var applied_frict = this.friction_sources[i].x * 0.10;
+			// TODO: replace the below (0.10) with math
+			//   based on friction coefficient and time elasped
+			var applied_frict = this.friction_sources[i].get_friction().x * 0.10;
 			if(applied_frict * applied_frict > this.velocity.x * this.velocity.x){
                 // Square the compared values to compare positive magnitude
 				this.velocity.x = 0.0;
@@ -77,6 +80,8 @@ class Physics_State {
 		// Reset friction sources
 		this.friction_sources = [];
 
+		// this.set_position(new Vector(this.last_position.x + this.velocity.x * delta_s,
+		// 	this.position.y));
 		this.set_position(new Vector(this.last_position.x + this.velocity.x * delta_s,
 			this.position.y));
 	}
@@ -85,6 +90,8 @@ class Physics_State {
 		this.velocity.y = this.velocity.y +
 			(this.acceleration.y + FORCE_DUE_TO_GRAVITY) * delta_s;
 
+		// this.set_position(new Vector(this.position.x, 
+		// 	this.last_position.y + this.velocity.y * delta_s));
 		this.set_position(new Vector(this.position.x, 
 			this.last_position.y + this.velocity.y * delta_s));
     }
@@ -108,24 +115,33 @@ class Physics_State {
 		}
 		return false;
 	}
+	add_friction_source (friction_source) {
+		for(var i = 0; i < this.friction_sources.length; ++i){
+			if(this.friction_sources[i].get_specialty_id() ==
+				friction_source.get_specialty_id()){
+				return;
+			}
+		}
+		this.friction_sources.push(friction_source);
+	}
     resolve_collisions (physics_states) {
 		if(!this.is_movable()){
 			// If this physics state does not move,
 			//   let other actors resolve their collisions with this
 			return;
 		}
-		var update_last_position = true;
 		for(var i = 0; i < this.collision_boxes.length; ++i){
 			for(var j = 0; j < physics_states.length; ++j){
 				var physics_state = physics_states[j];
-
+				if(this.parent_id == physics_state.parent_id){
+					continue;
+				}
 				if(!this.intersects(physics_state)){
 					continue;
 				}
-
 				var total_momentum = new Vector(0.0, 0.0);
 				var total_mass = this.mass + physics_state.mass;
-				var this_mass_per = 0.0;
+				var this_mass_per = 1.0;
 				var physics_state_mass_per = 0.0;
 				if(physics_state.is_movable()){
 					total_momentum = this.get_momentum().add(physics_state.get_momentum());
@@ -141,6 +157,7 @@ class Physics_State {
 					}
 					if(this.get_collision_box(i).intersects(physics_state.get_collision_box(k))){
 						// If this.get_collision_box(i) and physics_state.get_collision_box(k) intersect
+
 						var intersection_switch =
 							physics_state.get_last_collision_box(k).detect_positioning(this.get_last_collision_box(i));
 						// Determine where this was relative to physics_state
@@ -193,8 +210,6 @@ class Physics_State {
 							// Both physics_states get their share of x-axis momentum, based on mass
 							this.impulse_momentum(new Vector(total_momentum.x * this_mass_per, 0.0));
 							physics_state.impulse_momentum(new Vector(total_momentum.x * physics_state_mass_per, 0.0));
-							Add_Temp_Debug_String(this.velocity.str());
-							Add_Temp_Debug_String(physics_state.velocity.str());
 							break;
 						case COLLISION_BOX_STATE.VERTICAL:
 							// Handle momentum on the y-axis
@@ -206,35 +221,86 @@ class Physics_State {
 							physics_state.impulse_momentum(new Vector(0.0, total_momentum.y * physics_state_mass_per));
 							break;
 						default:
-							Add_Debug_String("intersection_switch value not recognized");
+							Add_Debug_String("momentum_handle_switch value not recognized");
 							break;
 						}
+
 						// Setup friction between the two physics_states
 						var frict_diff = this.velocity.subtract(physics_state.velocity);
-						this.friction_sources.push(frict_diff);
-						physics_state.friction_sources.push(frict_diff.scale(-1.0));
+
+						// TODO: base friction on normal force
+						// var mult = something something dot product
+
+						var this_friction_source =
+							new Friction_Source(frict_diff, physics_state.parent_id);
+						var physics_state_friction_source =
+							new Friction_Source(frict_diff.scale(-1.0), this.parent_id);
+						if(momentum_handle_switch == COLLISION_BOX_STATE.VERTICAL){
+							this.add_friction_source(this_friction_source);
+							physics_state.add_friction_source(physics_state_friction_source);
+						}
 					}
 				}
 			}
 		}
-		for(var i = 0; i < this.collision_boxes.length; ++i){
+		// project on x
+		var update_last_position = true;
+		var projection = new Physics_State(this);
+		projection.position.y = this.last_position.y;
+		for(var i = 0; i < projection.collision_boxes.length; ++i){
 			for(var j = 0; j < physics_states.length; ++j){
 				var physics_state = physics_states[j];
+				if(projection.parent_id == physics_state.parent_id){
+					continue;
+				}
 				for(var k = 0; k < physics_state.collision_boxes.length; ++k){
-					if(!this.get_collision_box(i).share_block_layer(physics_state.get_last_collision_box(k))){
+					if(!projection.get_collision_box(i).share_block_layer(physics_state.get_collision_box(k))){
 						continue;
 					}
-					if(this.get_collision_box(i).intersects(physics_state.get_collision_box(k)) ||
-						this.get_collision_box(i).intersects(physics_state.get_last_collision_box(k))){
+					if(projection.get_collision_box(i).intersects(physics_state.get_collision_box(k)) ||
+					projection.get_collision_box(i).intersects(physics_state.get_last_collision_box(k))){
+						// Add_Temp_Debug_String(projection.get_collision_box(i).get_position().str() + " : " + 
+						// 	physics_state.get_last_collision_box(k).get_position().str());
+						
 						update_last_position = false;
 					}
 				}
 			}
 		}
 		if(update_last_position){
-			this.set_absolute_position(this.position);
-		} else {
-			this.set_position(this.last_position);
+			// this.set_absolute_position(new Vector(this.position.x, this.last_position.y));
+			this.last_position.x = this.position.x;
+		}
+		Add_Temp_Debug_String(this.position.y);
+		// project on y
+		update_last_position = true;
+		projection = this;
+		projection.position.x = this.last_position.x;
+		for(var i = 0; i < projection.collision_boxes.length; ++i){
+			for(var j = 0; j < physics_states.length; ++j){
+				var physics_state = physics_states[j];
+				if(projection.parent_id == physics_state.parent_id){
+					continue;
+				}
+				for(var k = 0; k < physics_state.collision_boxes.length; ++k){
+					if(!projection.get_collision_box(i).share_block_layer(physics_state.get_collision_box(k))){
+						continue;
+					}
+					if(projection.get_collision_box(i).intersects(physics_state.get_collision_box(k)) ||
+					projection.get_collision_box(i).intersects(physics_state.get_last_collision_box(k))){
+						// Add_Temp_Debug_String(projection.get_collision_box(i).get_position().str() + " : " + 
+						// 	physics_state.get_last_collision_box(k).get_position().str());
+						Add_Temp_Debug_String("asd");
+						update_last_position = false;
+					}
+				}
+			}
+		}
+		Add_Temp_Debug_String(this.position.y);
+		if(update_last_position){
+			// this.set_absolute_position(new Vector(this.last_position.x, this.position.y));
+			Add_Temp_Debug_String("updating y");
+			this.last_position.y = this.position.y;
 		}
 	}
 }
