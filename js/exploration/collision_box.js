@@ -9,7 +9,7 @@ const COLLISION_BOX_STATE = {
 };
 class Collision_Box {
 	constructor (size=new Vector(0.0, 0.0), offset=new Vector(0.0, 0.0),
-		block_layers=[], parent_position=offset) {
+		block_layers=[], parent_position=new Vector(0.0, 0.0)) {
         this.size = size;
         this.offset = offset;
 	    // Block Layers are how collisions are organized.
@@ -19,8 +19,17 @@ class Collision_Box {
 	    // Special cases include:
 	    //	 A first list-element of -1 = Behaves as if on every block layer
 	    //   An empty block layer list = Will not collide with anything
-        this.block_layers = block_layers;
+		this.block_layers = block_layers;
 	    this.parent_position = parent_position;
+	}
+	clone () {
+		return new Collision_Box(this.size.clone(), this.offset.clone(),
+			this.block_layers.slice(0), this.parent_position.clone());
+	}
+	str () {
+		return "Collision Box: (size: " + this.size.str() +
+			")\n(offset: " + this.offset.str() + " )\n(parent_position: " +
+			this.parent_position.str() + ")";
 	}
     get_position () {
         return this.parent_position.add(this.offset);

@@ -17,16 +17,26 @@ class Physics_State {
         this.velocity = new Vector(0.0, 0.0);
 		this.friction_sources = [];
 	}
+	clone () {
+		var boxes = [];
+		for(var i = 0; i < this.collision_boxes.length; ++i){
+			boxes.push(this.collision_boxes[i].clone());
+		}
+		var clone = new Physics_State(this.position.clone(), this.mass,
+			boxes, this.parent_id);
+		clone.last_position = this.last_position.clone();
+		return clone;
+	}
 	get_collision_box (box_index) {
 		if(box_index >= this.collision_boxes.length){
-			console.log("ERROR::Attempting to get collision box of index \'" + box_index + "/':out of range");
+			Add_Debug_String("Attempting to get collision box of index \'" + box_index + "/':out of range");
 			return null;
 		}
 		return this.collision_boxes[box_index];
 	}
 	get_last_collision_box (box_index) {
 		if(box_index >= this.collision_boxes.length){
-			console.log("ERROR::Attempting to get last collision box of index \'" + box_index + "/':out of range");
+			Add_Debug_String("Attempting to get last collision box of index \'" + box_index + "/':out of range");
 			return null;
 		}
 		var last_box = new Collision_Box(this.get_collision_box(box_index).size,
@@ -46,12 +56,12 @@ class Physics_State {
 		this.velocity = new Vector(0.0, 0.0);
 	}
     set_position (position) {
-		this.position = position;
+		this.position = position.clone();
 		this.update_collisison_boxes_parent_position();
 	}
 	set_absolute_position (position) {
 		this.set_position(position);
-		this.last_position = position;
+		this.last_position = position.clone();
 	}
     is_movable () {return this.mass != -1;}
     get_force () {return this.acceleration.scale(this.mass);}
@@ -243,63 +253,37 @@ class Physics_State {
 				}
 			}
 		}
-		// project on x
-		var update_last_position = true;
-		var projection = new Physics_State(this);
-		projection.position.y = this.last_position.y;
-		for(var i = 0; i < projection.collision_boxes.length; ++i){
+
+		// Project along axes to determimne if last_position should update
+		var update_x_position = true;
+		var update_y_position = true;
+		var x_axis_projection = this.clone();
+		x_axis_projection.set_position(new Vector(this.position.x, this.last_position.y));
+		var y_axis_projection = this.clone();
+		y_axis_projection.set_position(new Vector(this.last_position.x, this.position.y));
+		for(var i = 0; i < this.collision_boxes.length; ++i){
 			for(var j = 0; j < physics_states.length; ++j){
 				var physics_state = physics_states[j];
-				if(projection.parent_id == physics_state.parent_id){
+				if(this.parent_id == physics_state.parent_id){
 					continue;
 				}
 				for(var k = 0; k < physics_state.collision_boxes.length; ++k){
-					if(!projection.get_collision_box(i).share_block_layer(physics_state.get_collision_box(k))){
+					if(!this.get_collision_box(i).share_block_layer(physics_state.get_collision_box(k))){
 						continue;
 					}
-					if(projection.get_collision_box(i).intersects(physics_state.get_collision_box(k)) ||
-					projection.get_collision_box(i).intersects(physics_state.get_last_collision_box(k))){
-						// Add_Temp_Debug_String(projection.get_collision_box(i).get_position().str() + " : " + 
-						// 	physics_state.get_last_collision_box(k).get_position().str());
-						
-						update_last_position = false;
+					if(x_axis_projection.get_collision_box(i).intersects(physics_state.get_last_collision_box(k))){
+						update_x_position = false;
+					}
+					if(y_axis_projection.get_collision_box(i).intersects(physics_state.get_last_collision_box(k))){
+						update_y_position = false;
 					}
 				}
 			}
 		}
-		if(update_last_position){
-			// this.set_absolute_position(new Vector(this.position.x, this.last_position.y));
+		if(update_x_position){
 			this.last_position.x = this.position.x;
 		}
-		Add_Temp_Debug_String(this.position.y);
-		// project on y
-		update_last_position = true;
-		projection = this;
-		projection.position.x = this.last_position.x;
-		for(var i = 0; i < projection.collision_boxes.length; ++i){
-			for(var j = 0; j < physics_states.length; ++j){
-				var physics_state = physics_states[j];
-				if(projection.parent_id == physics_state.parent_id){
-					continue;
-				}
-				for(var k = 0; k < physics_state.collision_boxes.length; ++k){
-					if(!projection.get_collision_box(i).share_block_layer(physics_state.get_collision_box(k))){
-						continue;
-					}
-					if(projection.get_collision_box(i).intersects(physics_state.get_collision_box(k)) ||
-					projection.get_collision_box(i).intersects(physics_state.get_last_collision_box(k))){
-						// Add_Temp_Debug_String(projection.get_collision_box(i).get_position().str() + " : " + 
-						// 	physics_state.get_last_collision_box(k).get_position().str());
-						Add_Temp_Debug_String("asd");
-						update_last_position = false;
-					}
-				}
-			}
-		}
-		Add_Temp_Debug_String(this.position.y);
-		if(update_last_position){
-			// this.set_absolute_position(new Vector(this.last_position.x, this.position.y));
-			Add_Temp_Debug_String("updating y");
+		if(update_y_position){
 			this.last_position.y = this.position.y;
 		}
 	}
