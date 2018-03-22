@@ -20,20 +20,27 @@ class Robot extends Actor{
         if(this.cube != null){
             return;
         }
-        for(var i = 0; i < cube_stack_id_list.length; ++i){
-            var cube_stack = exploration.scene.get_renderable_from_id(cube_stack_id_list[i]);
-            if(cube_stack.physics_state.intersects(this.physics_state)){
-                // change animation to indicate the robot has a cube
-                var cube = new Power_Cube(new Vector(0.0, 0.0));
-                this.cube = cube;
+        for(var i = 0; i < aquisition_id_list.length; ++i){
+            var aquisition = exploration.scene.get_renderable_from_id(aquisition_id_list[i]);
+            if(aquisition.physics_state.intersects(this.physics_state)){
+                // TODO: change animation to indicate the robot has a cube
+                this.cube = aquisition.get_cube();
+                // TODO: set cube above robot
+                
+                if(this.cube){
+                    this.cube.set_ghost();
+                    this.cube.hide();
+                }
             }
         }
     }
     has_cube () {return this.cube != null;}
     launch () {
         if(this.has_cube()){
-            // var power_block = new Power_Cube(robot.last_position.add(new Vector(0.25, -0.5)));
             this.cube.set_absolute_position(robot.position.add(new Vector(0.25, -0.5)));
+            this.cube.show();
+            this.cube.set_freeze(false);
+            this.cube.set_ghost(false);
             switch(this.facing){
             case Direction.right:
                 this.cube.impulse_momentum(new Vector(2.0, CUBE_LAUNCH_Y_VELOCITY));
@@ -60,6 +67,9 @@ class Robot extends Actor{
                 if(this.physics_state.intersects(sw.physics_state) &&
                     this.allience === sw.allience){
                     // If the robot and switch intersect
+                    this.cube.show();
+                    this.cube.set_freeze(false);
+                    this.cube.set_ghost(false);
                     sw.add_cube(this.cube);
                     exploration.scene.add_renderable(this.cube);
                     this.cube = null;

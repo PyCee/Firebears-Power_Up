@@ -16,6 +16,10 @@ class Physics_State {
         this.acceleration = new Vector(0.0, 0.0);
         this.velocity = new Vector(0.0, 0.0);
 		this.friction_sources = [];
+
+		this.backup_mass = this.mass;
+		this.backup_acceleration = new Vector(0.0, 0.0);
+		this.backup_velocity = new Vector(0.0, 0.0);
 	}
 	clone () {
 		var boxes = [];
@@ -50,10 +54,19 @@ class Physics_State {
 			this.collision_boxes[i].set_parent_position(this.position);
 		}
 	}
-	freeze () {
-		this.mass = -1;
-		this.acceleration = new Vector(0.0, 0.0);
-		this.velocity = new Vector(0.0, 0.0);
+	freeze (freeze=true) {
+		if(freeze){
+			this.backup_mass = this.mass;
+			this.backup_acceleration = this.acceleration;
+			this.backup_velocity = this.velocity;
+			this.mass = -1;
+			this.acceleration = new Vector(0.0, 0.0);
+			this.velocity = new Vector(0.0, 0.0);
+		} else {
+			this.mass = this.backup_mass;
+			this.acceleration = this.backup_acceleration;
+			this.velocity = this.backup_velocity;
+		}
 	}
     set_position (position) {
 		this.position = position.clone();

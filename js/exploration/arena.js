@@ -36,6 +36,8 @@ var Arena = {
 
         exploration.scene.add_renderable(Arena.blue_score);
         exploration.scene.add_renderable(Arena.red_score);
+        Arena.l_cube_stack.add_cubes_to_scene();
+        Arena.r_cube_stack.add_cubes_to_scene();
 
         Arena.scoring.blue = 0;
         Arena.scoring.red = 0;
@@ -69,8 +71,10 @@ var Arena = {
         2, GOAL_COMPONENT.TYPE.SWITCH),
     r_switch: new Goal_Pair(new Vector(RIGHT_WALL - (6.3), ARENA_HEIGHT - (0.5 + 0.5)),
         2, GOAL_COMPONENT.TYPE.SWITCH),
-    l_cube_stack: new Cube_Stack(new Vector(0.4 + DISTANCE_BEHIND_DRIVER_WALLS, ARENA_HEIGHT - (0.5 + 0.66)), 1),
-    r_cube_stack: new Cube_Stack(new Vector(RIGHT_WALL - 1.4, ARENA_HEIGHT - (0.5 + 0.66)), 1),
+    l_cube_stack: new Cube_Stack(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 0.4 + 6.0, ARENA_HEIGHT - (0.5 + 0.96)), 1),
+    r_cube_stack: new Cube_Stack(new Vector(RIGHT_WALL - 0.4 - 7.05, ARENA_HEIGHT - (0.5 + 0.96)), 1),
+    l_portal: new Portal(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 0.4, ARENA_HEIGHT - (0.5 + 1.2)), 1),
+    r_portal: new Portal(new Vector(RIGHT_WALL - 0.4 - 1.05, ARENA_HEIGHT - (0.5 + 1.2)), 1),
     score_timeline: new Timeline(false)
 };
 
@@ -118,7 +122,7 @@ Arena.map.set_actors([
     Arena.r_driver_wall,
     Arena.l_driver_wall,
     robot,
-    Spinny.robot,
+    // Spinny.robot,
     Arena.scale.blue_component,
     Arena.scale.red_component,
     Arena.l_switch.blue_component,
@@ -126,5 +130,7 @@ Arena.map.set_actors([
     Arena.r_switch.blue_component,
     Arena.r_switch.red_component,
     Arena.l_cube_stack,
-    Arena.r_cube_stack
+    Arena.r_cube_stack,
+    Arena.l_portal,
+    Arena.r_portal
     ]);

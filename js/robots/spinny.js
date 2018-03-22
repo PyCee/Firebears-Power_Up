@@ -6,7 +6,8 @@ var Spinny = {
                 ], ALLIENCE_TYPE.RED),
     speed: 0.4,
     timer: new Timeline(false),
-    curr_spin_duration: Math.random() * 3.0,
+    place_timer: new Timeline(false), // Can only place a cube down every 3 seconds
+    curr_spin_duration: Math.random() * 4.0,
     spin_state: 0
 }
 
@@ -15,7 +16,7 @@ function spinny_ai () {
 
     if(Spinny.timer.get_elapsed_time() > Spinny.curr_spin_duration){
         Spinny.timer.reset();
-        Spinny.curr_spin_duration = Math.random() * 3.0;
+        Spinny.curr_spin_duration = 1.0 + Math.random() * 4.0;
         Spinny.spin_state = Math.abs(Spinny.spin_state - 1);
         Spinny.robot.impulse_force(Spinny.robot.get_force().scale(-1));
     }
@@ -30,11 +31,20 @@ function spinny_ai () {
         Spinny.robot.impulse_force(new Vector(-move_speed, 0.0));
         break;
     }
-
+    var last_cube = Spinny.robot.cube;
     Spinny.robot.pickup();
-    if(Spinny.robot.physics_state.intersects(Arena.r_switch.red_component.physics_state) ||
-        Spinny.robot.physics_state.intersects(Arena.l_switch.red_component.physics_state)){
-        Spinny.robot.place();
+    if(last_cube == null && Spinny.robot.cube != null){
+        Spinny.place_timer.start();
+    }
+    if(Spinny.place_timer.get_elapsed_time() >= 3.0){
+        Spinny.place_timer.reset();
+        Spinny.place_timer.stop();
+    }
+    if(!Spinny.place_timer.is_active()){
+        if(Spinny.robot.physics_state.intersects(Arena.r_switch.red_component.physics_state) ||
+            Spinny.robot.physics_state.intersects(Arena.l_switch.red_component.physics_state)){
+            Spinny.robot.place();
+        }
     }
 }
 Spinny.robot.set_ai(spinny_ai);

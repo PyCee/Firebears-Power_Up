@@ -8,13 +8,17 @@ class Actor extends Renderable {
 	set_ai (fun) {
 		this.ai_update = fun;
 	}
-	set_ghost () {
+	set_ghost (ghost=true) {
 		for(var i = 0; i < this.physics_state.collision_boxes.length; ++i){
-			this.physics_state.collision_boxes[i].set_block_layers([]);
+			if(ghost){
+				this.physics_state.collision_boxes[i].set_block_layers([]);
+			} else {
+				this.physics_state.collision_boxes[i].reset_block_layers();
+			}
 		}
 	}
-	set_freeze () {
-		this.physics_state.freeze();
+	set_freeze (freeze=true) {
+		this.physics_state.freeze(freeze);
 	}
 	set_position (position) {
 		this.physics_state.set_position(position);

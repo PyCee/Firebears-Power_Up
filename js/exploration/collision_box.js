@@ -20,6 +20,7 @@ class Collision_Box {
 	    //	 A first list-element of -1 = Behaves as if on every block layer
 	    //   An empty block layer list = Will not collide with anything
 		this.block_layers = block_layers;
+		this.backup_block_layers = block_layers;
 	    this.parent_position = parent_position;
 	}
 	clone () {
@@ -79,7 +80,10 @@ class Collision_Box {
     }
     set_block_layers (block_layers=[]){
         this.block_layers = block_layers;
-    }
+	}
+	reset_block_layers () {
+		this.set_block_layers(this.backup_block_layers);
+	}
     share_block_layer (box) {
 		if(this.block_layers.length == 0 ||
 			box.block_layers.length == 0){

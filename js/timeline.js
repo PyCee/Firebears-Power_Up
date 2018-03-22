@@ -6,12 +6,13 @@ function Update_Timelines (delta_s) {
 }
 class Timeline {
     constructor (active=true) {
-	// Elapsed time in seconds
-	this.elapsed_time = 0.0;
-	this.active = active;
-    this.timers = [];
-    timeline_list.push(this);
+	    // Elapsed time in seconds
+	    this.elapsed_time = 0.0;
+	    this.active = active;
+        this.timers = [];
+        timeline_list.push(this);
     }
+    is_active () {return this.active;}
     get_elapsed_time () {return this.elapsed_time;}
     start () {this.active = true;}
     stop () {this.active = false;}
