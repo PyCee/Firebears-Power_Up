@@ -19,9 +19,12 @@ function tutorial_viewport_update () {
     Viewport.offset = Viewport.offset.scale(canvas.width / curr_scene.inside_dimensions.x);
 }
 var Tutorial = {
+    active: false,
     map: new Map(TUTORIAL_WIDTH, new Actor(new Vector(0.0, 0.0), new Vector(TUTORIAL_WIDTH, TUTORIAL_HEIGHT),
                 new Animation("TUTORIAL Background", Sprite.arena_background)),
         function(){
+            Tutorial.active = true;
+
             Viewport.set_update(tutorial_viewport_update);
 
             Tutorial.score_timeline.reset();
@@ -103,7 +106,12 @@ var Tutorial = {
                 [])
         ])
 };
-
+function end_tutorial () {
+    if(Tutorial.active){
+        Tutorial.active = false;
+        Arena.map.set(new Vector(3.0, ARENA_HEIGHT - (0.5 + 0.8)));
+    }
+}
 function update_tutorial_score_with_ownership (goal_pair) {
     var text_rise_duration = 3.0;
     var text_rise_position = new Vector(0.0, 2.2);
@@ -141,11 +149,8 @@ Tutorial.score_timeline.add_event(1.0, function(){
 var exit_trigger = function(){
     return robot.physics_state.intersects(Tutorial.exit.physics_state);
 }
-var exit_callback = function(){
-    Arena.map.set(new Vector(3.0, ARENA_HEIGHT - (0.5 + 0.8)));
-}
 Tutorial.map.set_events([
-    new Event(exit_trigger, exit_callback)
+    new Event(exit_trigger, end_tutorial)
 ]);
 Tutorial.map.set_actors([
     robot,

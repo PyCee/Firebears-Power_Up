@@ -84,6 +84,9 @@ exploration.scene.user_input.add_keyboard_event("t", "press", function(){
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){
 	robot.launch();
 });
+exploration.scene.user_input.add_keyboard_event("p", "press", function(){
+	end_tutorial();
+});
 
 // Makeshift event response for arcade controls
 var Gamepad_Index = -1;
