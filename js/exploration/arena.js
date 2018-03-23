@@ -60,7 +60,7 @@ var Arena = {
             new Collision_Box(new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))), 
                 new Vector(0.0, 0.0), [-1])
         ]),
-    l_driver_wall: new Actor(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 16.0 - 0.4, ARENA_HEIGHT - (0.5 + 2.5)),
+    l_driver_wall: new Actor(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + FIELD_WIDTH - 0.4, ARENA_HEIGHT - (0.5 + 2.5)),
         new Vector(0.4, ARENA_HEIGHT - (ARENA_HEIGHT - (0.5 + 2.5))),
         new Animation("l_driver_wall", Sprite.black), 1, function(){}, -1,
         [

@@ -4,7 +4,7 @@ var last_frame_time = window.performance.now();
 var current_frame_time = 0;
 
 // Show the title scene on start
-Arena.map.set(new Vector(4.0, ARENA_HEIGHT - (0.5 + 0.8)));
+Tutorial.map.set(new Vector(3.0, TUTORIAL_HEIGHT - (0.5 + 0.8)));
 exploration.scene.show();
 
 function loop () {

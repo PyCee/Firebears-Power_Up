@@ -30,17 +30,18 @@ class Robot extends Actor{
         }
         for(var i = 0; i < aquisition_id_list.length; ++i){
             var aquisition = exploration.scene.get_renderable_from_id(aquisition_id_list[i]);
+            if(aquisition == null){
+                continue;
+            }
             if(aquisition.physics_state.intersects(this.physics_state)){
-                // TODO: change animation to indicate the robot has a cube
                 this.cube = aquisition.get_cube();
-                // TODO: set cube above robot
-                
                 if(this.cube){
                     var flipped = this.animation.horizontal_flip;
                     this.set_animation(this.cube_animation);
                     this.animation.set_flip(flipped);
                     this.cube.set_ghost();
                     this.cube.hide();
+                    break;
                 }
             }
         }
@@ -63,7 +64,7 @@ class Robot extends Actor{
                 break;
             }
             exploration.scene.add_renderable(this.cube);
-            Arena.map.add_actor(this.cube);
+            exploration.map.add_actor(this.cube);
             this.cube = null;
             
             var flipped = this.animation.horizontal_flip;
@@ -79,6 +80,9 @@ class Robot extends Actor{
             for(var i = 0; i < switch_id_list.length; ++i){
                 // For each switch
                 var sw = exploration.scene.get_renderable_from_id(switch_id_list[i]);
+                if(sw == null) {
+                    continue;
+                }
                 if(this.physics_state.intersects(sw.physics_state) &&
                     this.allience === sw.allience){
                     // If the robot and switch intersect

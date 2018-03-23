@@ -43,6 +43,7 @@ var exploration = {
 		for(var i = 0; i < exploration.map.events.length; ++i){
 		    exploration.map.events[i].test();
 		}
+		Add_Temp_Debug_String(robot.position.str());
     }),
     set_map: function (map) {
 	exploration.map = map;
@@ -76,11 +77,9 @@ exploration.scene.user_input.add_keyboard_event("d", "release", function(){
 	robot.physics_state.impulse_force(new Vector(-1.0 * ROBOT_MOVE_SPEED, 0.0));
 });
 exploration.scene.user_input.add_keyboard_event("q", "press", function(){
-	// If the robot has a power block and is positioned by a switch
 	robot.place();
 });
 exploration.scene.user_input.add_keyboard_event("t", "press", function(){
-	// tmp pick up power cube
 	robot.pickup();
 });
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){

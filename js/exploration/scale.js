@@ -4,11 +4,14 @@ class Scale_Component extends Goal {
     constructor (position, draw_priority, allience) {
         super(position, draw_priority, allience, 
             [
+                // Bottom
                 new Collision_Box(new Vector(1.5, 0.15),
                     new Vector(0.0, 0.35), [-1]),
-                new Collision_Box(new Vector(0.01, 0.35),
+                // Left
+                new Collision_Box(new Vector(0.1, 0.35),
                     new Vector(0.0, 0.0), [-1]),
-                new Collision_Box(new Vector(0.01, 0.35),
+                // Right
+                new Collision_Box(new Vector(0.1, 0.35),
                     new Vector(1.4, 0.0), [-1])
             ]);
 
