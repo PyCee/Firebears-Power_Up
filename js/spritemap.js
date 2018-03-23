@@ -26,6 +26,7 @@ var Sprite = {
     blue_goal: new Spritemap("blue_scale.png"),
     red_goal: new Spritemap("red_scale.png"),
     portal: new Spritemap("portal.png"),
+    spinny: new Spritemap("spinny.png", 2, 1),
     upchuck: new Spritemap("upchuck.png", 2, 1)
     //: new Spritemap(".png")
 };
