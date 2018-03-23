@@ -44,16 +44,35 @@ class Cube_Stack extends Aquisition {
         }
     }
 }
+const PORTAL_START_CUBE_POS = new Vector(0.3375, 0.62);
 class Portal extends Aquisition {
     constructor (position, draw_priority) {
         super(position, new Vector(1.05, 1.2),
-            new Animation("Portal Animation", Sprite.black),
+            new Animation("Portal Animation", Sprite.portal),
             draw_priority, [
                 new Collision_Box(new Vector(1.05, 1.2),
                     new Vector(0.0, 0.0), [])
             ]);
+        this.load_cube_timeline = new Timeline();
+        this.cube = new Power_Cube(this.position.add(PORTAL_START_CUBE_POS));
+        this.cube.set_ghost();
+        this.cube.draw_priority = 1;
+        exploration.scene.add_renderable(this.cube);
+
+        this.rise_sequence = new Sequence();
+        this.rise_sequence.add_lerp(new Lerp(0.0, 4.0, new Vector(0.0, 0.4),
+            [this.cube]));
+        this.rise_sequence.start();
     }
     get_cube () {
-        return new Power_Cube(new Vector(0.0, 0.0));
+        if(this.load_cube_timeline.get_elapsed_time() > 4.0){
+            this.start_cube_rise();
+            return new Power_Cube(new Vector(0.0, 0.0));
+        }
+    }
+    start_cube_rise () {
+        this.cube.set_absolute_position(this.position.add(PORTAL_START_CUBE_POS));
+        this.rise_sequence.reset();
+        this.load_cube_timeline.reset();
     }
 }

@@ -25,6 +25,7 @@ var Sprite = {
     arena_background: new Spritemap("arena_bg.png"),
     blue_goal: new Spritemap("blue_scale.png"),
     red_goal: new Spritemap("red_scale.png"),
+    portal: new Spritemap("portal.png"),
     upchuck: new Spritemap("upchuck.png", 2, 1)
     //: new Spritemap(".png")
 };

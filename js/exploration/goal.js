@@ -76,7 +76,6 @@ class Goal_Pair {
     }
     get_ownership () {
         // Returns which side has more cubes
-        // console.log(this.blue_component.get_cube_count() + " : " + this.red_component.get_cube_count());
         if(this.blue_component.get_cube_count() > this.red_component.get_cube_count()){
             return ALLIENCE_TYPE.BLUE;
         } else if (this.red_component.get_cube_count() > this.blue_component.get_cube_count()){

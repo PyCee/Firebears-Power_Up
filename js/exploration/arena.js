@@ -36,6 +36,8 @@ var Arena = {
 
         exploration.scene.add_renderable(Arena.blue_score);
         exploration.scene.add_renderable(Arena.red_score);
+        exploration.scene.add_renderable(Arena.l_portal.cube);
+        exploration.scene.add_renderable(Arena.r_portal.cube);
         Arena.l_cube_stack.add_cubes_to_scene();
         Arena.r_cube_stack.add_cubes_to_scene();
 
@@ -73,8 +75,8 @@ var Arena = {
         2, GOAL_COMPONENT.TYPE.SWITCH),
     l_cube_stack: new Cube_Stack(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 0.4 + 6.0, ARENA_HEIGHT - (0.5 + 0.96)), 1),
     r_cube_stack: new Cube_Stack(new Vector(RIGHT_WALL - 0.4 - 7.05, ARENA_HEIGHT - (0.5 + 0.96)), 1),
-    l_portal: new Portal(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 0.4, ARENA_HEIGHT - (0.5 + 1.2)), 1),
-    r_portal: new Portal(new Vector(RIGHT_WALL - 0.4 - 1.05, ARENA_HEIGHT - (0.5 + 1.2)), 1),
+    l_portal: new Portal(new Vector(DISTANCE_BEHIND_DRIVER_WALLS + 0.4, ARENA_HEIGHT - (0.5 + 1.2)), 2),
+    r_portal: new Portal(new Vector(RIGHT_WALL - 0.4 - 1.05, ARENA_HEIGHT - (0.5 + 1.2)), 2),
     score_timeline: new Timeline(false)
 };
 
