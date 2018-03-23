@@ -51,10 +51,11 @@ var exploration = {
     map: null
 };
 var robot = new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.8),
-				new Animation("Robot Anim", Sprite.red, [[0,0]], 1, -1),
+				new Animation("Robot Anim", Sprite.upchuck, [[0,0]], 1, -1),
+				new Animation("Robot Anim", Sprite.upchuck, [[1, 0]], 1, -1),
 				4, 10, 
 				[
-					new Collision_Box(new Vector(1.0, 0.8), new Vector(0.0, 0.0), [-1])
+					new Collision_Box(new Vector(1.0, 0.2), new Vector(0.0, 0.6), [-1])
 				], ALLIENCE_TYPE.BLUE);
 var ROBOT_MOVE_SPEED = 15.0 * robot.physics_state.mass;
 

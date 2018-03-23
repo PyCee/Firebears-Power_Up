@@ -1,9 +1,9 @@
 class Spritemap {
-    constructor (resource_s, rows=1, cols=1) {
+    constructor (resource_s, cols=1, rows=1) {
 	    this.resource = load_resource("img", resource_s);
 	    this.resource_s = resource_s;
-	    this.rows = rows;
 	    this.cols = cols;
+	    this.rows = rows;
     }
     get () {
 	    return get_resource[this.resource_s];
@@ -24,6 +24,7 @@ var Sprite = {
     power_cube: new Spritemap("power_cube.png"),
     arena_background: new Spritemap("arena_bg.png"),
     blue_goal: new Spritemap("blue_scale.png"),
-    red_goal: new Spritemap("red_scale.png")
+    red_goal: new Spritemap("red_scale.png"),
+    upchuck: new Spritemap("upchuck.png", 2, 1)
     //: new Spritemap(".png")
 };

@@ -6,16 +6,24 @@ var power_cube_id_list = [];
 const CUBE_LAUNCH_Y_VELOCITY = -7.0;
 
 class Robot extends Actor{
-    constructor (position, size, animation, draw_priority, mass,
+    constructor (position, size, animation, cube_animation, draw_priority, mass,
             collision_boxes, allience=ALLIENCE_TYPE.NEITHER){
         super(position, size, animation, draw_priority,
             function(){}, mass, collision_boxes);
+        this.no_cube_animation = this.animation;
+        this.cube_animation = cube_animation;
         this.cube = null;
         this.facing = Direction.right;
         this.allience = allience;
     }
-    turn_right () {this.facing = Direction.right;}
-    turn_left () {this.facing = Direction.left;}
+    turn_right () {
+        this.facing = Direction.right;
+        this.animation.set_flip(false);
+    }
+    turn_left () {
+        this.facing = Direction.left;
+        this.animation.set_flip(true);
+    }
     pickup () {
         if(this.cube != null){
             return;
@@ -28,6 +36,9 @@ class Robot extends Actor{
                 // TODO: set cube above robot
                 
                 if(this.cube){
+                    var flipped = this.animation.horizontal_flip;
+                    this.set_animation(this.cube_animation);
+                    this.animation.set_flip(flipped);
                     this.cube.set_ghost();
                     this.cube.hide();
                 }
@@ -54,6 +65,10 @@ class Robot extends Actor{
             exploration.scene.add_renderable(this.cube);
             Arena.map.add_actor(this.cube);
             this.cube = null;
+            
+            var flipped = this.animation.horizontal_flip;
+            this.set_animation(this.no_cube_animation);
+            this.animation.set_flip(flipped);
         } else {
             console.log("attempting to shoot with no cube");
         }
@@ -73,6 +88,9 @@ class Robot extends Actor{
                     sw.add_cube(this.cube);
                     exploration.scene.add_renderable(this.cube);
                     this.cube = null;
+                    var flipped = this.animation.horizontal_flip;
+                    this.set_animation(this.no_cube_animation);
+                    this.animation.set_flip(flipped);
                     break;
                 }
             }

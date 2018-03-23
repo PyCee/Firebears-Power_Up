@@ -122,7 +122,7 @@ Arena.map.set_actors([
     Arena.r_driver_wall,
     Arena.l_driver_wall,
     robot,
-    // Spinny.robot,
+    Spinny.robot,
     Arena.scale.blue_component,
     Arena.scale.red_component,
     Arena.l_switch.blue_component,

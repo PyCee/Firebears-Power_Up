@@ -1,5 +1,6 @@
 var Spinny = {
     robot: new Robot(new Vector(0.0, 0.0), new Vector(1.0, 0.3),
+                new Animation("Spinny Anim", Sprite.red),
                 new Animation("Spinny Anim", Sprite.red), 4, 1, [
                     new Collision_Box(new Vector(1.0, 0.3),
                         new Vector(0.0, 0.0), [-1])
