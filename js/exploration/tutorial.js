@@ -34,6 +34,7 @@ var Tutorial = {
             exploration.scene.add_renderable(Tutorial.launch_text);
             exploration.scene.add_renderable(Tutorial.score_text);
             exploration.scene.add_renderable(Tutorial.score_text_2);
+            exploration.scene.add_renderable(Tutorial.score_text_3);
             exploration.scene.add_renderable(Tutorial.exit_text);
             exploration.scene.add_renderable(Tutorial.portal.cube);
             Tutorial.cube_stack_1.add_cubes_to_scene();
@@ -88,12 +89,15 @@ var Tutorial = {
         "You score 1 point/sec for each goal",
         "#000000"),
     score_text_2: new World_Text(new Vector(26, TUTORIAL_HEIGHT - (0.5 + 1.65)), 0.2,
-        "that has more cubes on the blue side",
+        "that has more cubes on the blue side.",
         "#000000"),
-    exit_text: new World_Text(new Vector(31.5, TUTORIAL_HEIGHT - (0.5 + 1.65)), 0.2,
+    score_text_3: new World_Text(new Vector(26, TUTORIAL_HEIGHT - (0.5 + 1.4)), 0.2,
+        "You don't gain points from the right-most goal",
+        "#000000"),
+    exit_text: new World_Text(new Vector(32, TUTORIAL_HEIGHT - (0.5 + 1.65)), 0.2,
         "Enter the green square to start the match",
         "#000000"),
-    exit: new Actor(new Vector(32, TUTORIAL_HEIGHT - (0.5 + 1.0)), new Vector(3.0, 1.0),
+    exit: new Actor(new Vector(35, TUTORIAL_HEIGHT - (0.5 + 1.0)), new Vector(3.0, 1.0),
         new Animation("exit", Sprite.green), 1, function(){}, -1, [
             new Collision_Box(new Vector(3.0, 1.0), new Vector(0.0, 0.0),
                 [])
@@ -106,12 +110,10 @@ function update_tutorial_score_with_ownership (goal_pair) {
     var score_ind = null;
     switch(goal_pair.get_ownership()){
     case ALLIENCE_TYPE.BLUE:
-        Arena.scoring.blue = Arena.scoring.blue + 1;
         score_ind = new World_Text(goal_pair.blue_component.position.add(new Vector(0.4, -0.6)),
             0.5, "+1", "#0000ff");
         break;
     case ALLIENCE_TYPE.RED:
-        Arena.scoring.red = Arena.scoring.red + 1;
         score_ind = new World_Text(goal_pair.red_component.position.add(new Vector(0.4, -0.6)),
             0.5, "+1", "#ff0000");
         break;

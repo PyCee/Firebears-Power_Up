@@ -43,10 +43,9 @@ var exploration = {
 		for(var i = 0; i < exploration.map.events.length; ++i){
 		    exploration.map.events[i].test();
 		}
-		Add_Temp_Debug_String(robot.position.str());
     }),
     set_map: function (map) {
-	exploration.map = map;
+		exploration.map = map;
     },
 
     // Reference to the data that makes up the current map

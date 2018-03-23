@@ -19,6 +19,9 @@ class Screen_Text extends Text {
         position - vector with screen coordinates (0, 1)
     */
     display () {
+        if(!this.should_display){
+            return;
+        }
         ctx.textBaseline = "hanging";
         ctx.fillStyle = this.color;
         ctx.font = (this.font_height * canvas.height) +
@@ -34,6 +37,9 @@ class World_Text extends Text {
         position - vector with world coordinates (0, curr_scene.inside_width)
     */
     display () {
+        if(!this.should_display){
+            return;
+        }
         ctx.textBaseline = "hanging";
         ctx.fillStyle = this.color;
         ctx.font = (this.font_height * canvas.width) / curr_scene.inside_dimensions.x +
