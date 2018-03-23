@@ -8,7 +8,7 @@ function arena_viewport_update () {
     Viewport.size.x = ARENA_WIDTH * 0.5;
     Viewport.size.y = ARENA_HEIGHT * 0.5;
 
-    var horizontal_center = robot.position.x;
+    var horizontal_center = robot.position.x + robot.size.x/2;
     horizontal_center = Math.min(horizontal_center, ARENA_WIDTH - 5.0);
     horizontal_center = Math.max(horizontal_center, 5.0);
     var offset = new Vector(Viewport.size.x / 2.0 - horizontal_center,
