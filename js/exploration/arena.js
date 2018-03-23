@@ -110,7 +110,7 @@ function update_score_with_ownership (goal_pair,
             score_ind = new World_Text(goal_pair.red_component.position.add(new Vector(0.4, -0.6)),
                 0.5, "+1", "#ff0000");
         } else {
-            score_ind = new World_Text(goal_pair.blue_component.position.add(new Vector(0.4, -0.6)),
+            score_ind = new World_Text(goal_pair.red_component.position.add(new Vector(0.4, -0.6)),
             0.5, "+0", "#ff0000");
         }
         break;
