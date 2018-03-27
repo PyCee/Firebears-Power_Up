@@ -1,7 +1,9 @@
 var physics_time_accum = 0;
 
-var team_number = new World_Text(new Vector(0.0, 0.0), 0.175, "", "#000000");
-team_number.set_text(prompt("Team Number: "));
+var team_number = new World_Text(new Vector(0.0, 0.0), 0.175, "2846", "#000000");
+function set_team_number (number_text) {
+	team_number.set_text(number_text);
+}
 
 var exploration = {
     	// The scene that will be updated for each map
