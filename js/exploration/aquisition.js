@@ -6,10 +6,12 @@ class Aquisition extends Actor {
         aquisition_id_list.push(this.id);
     }
     get_cube () {
-        Add_Debug_String("should never see");
+        Add_Debug_String("Should never see a base Aquisition.get_cube()");
         return null;
     }
 }
+
+// Cube Stack
 class Cube_Stack extends Aquisition {
     constructor (position, draw_priority) {
         super(position, new Vector(1.05, 0.96),
@@ -44,6 +46,8 @@ class Cube_Stack extends Aquisition {
         }
     }
 }
+
+// Portal
 const PORTAL_START_CUBE_POS = new Vector(0.3375, 0.62);
 class Portal extends Aquisition {
     constructor (position, draw_priority) {

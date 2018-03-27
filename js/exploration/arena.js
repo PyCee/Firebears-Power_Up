@@ -34,7 +34,8 @@ var Arena = {
 
         Arena.score_timeline.start();
 
-        exploration.scene.add_renderable(Arena.blue_score);
+        exploration.scene.add_renderable(team_number);
+       exploration.scene.add_renderable(Arena.blue_score);
         exploration.scene.add_renderable(Arena.red_score);
         exploration.scene.add_renderable(Arena.countdown_text);
         exploration.scene.add_renderable(Arena.l_portal.cube);

@@ -1,9 +1,12 @@
 var physics_time_accum = 0;
 
+var team_number = new World_Text(new Vector(0.0, 0.0), 0.175, "", "#000000");
+team_number.set_text(prompt("Team Number: "));
+
 var exploration = {
-    // The scene that will be updated for each map
-    scene: new Scene("Exploration", 1.0, function(){
-	physics_time_accum = 0;
+    	// The scene that will be updated for each map
+    	scene: new Scene("Exploration", 1.0, function(){
+		physics_time_accum = 0;
 	}, null,
 	function(delta_s){
 		check_gamepad_input();
@@ -43,6 +46,7 @@ var exploration = {
 		for(var i = 0; i < exploration.map.events.length; ++i){
 		    exploration.map.events[i].test();
 		}
+		team_number.position = robot.position.add(new Vector(0.3, 0.57));
     }),
     set_map: function (map) {
 		exploration.map = map;

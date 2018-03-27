@@ -29,6 +29,7 @@ var Tutorial = {
 
             Tutorial.score_timeline.reset();
 
+            exploration.scene.add_renderable(team_number);
             exploration.scene.add_renderable(Tutorial.move_text);
             exploration.scene.add_renderable(Tutorial.pickup_text);
             exploration.scene.add_renderable(Tutorial.pickup_text_2);
@@ -87,7 +88,7 @@ var Tutorial = {
     launch_text: new World_Text(new Vector(20.5, TUTORIAL_HEIGHT - (0.5 + 1.9)), 0.2,
         "Press E to chuck a cube onto the Scale",
         "#000000"),
-    scale: new Goal_Pair(new Vector(21.5, TUTORIAL_HEIGHT - (0.5 + 2.5)), 3, GOAL_COMPONENT.TYPE.SCALE),
+    scale: new Goal_Pair(new Vector(21.5, TUTORIAL_HEIGHT - (0.5 + 2.5)), 8, GOAL_COMPONENT.TYPE.SCALE),
     score_text: new World_Text(new Vector(26, TUTORIAL_HEIGHT - (0.5 + 1.9)), 0.2,
         "You score 1 point/sec for each goal",
         "#000000"),

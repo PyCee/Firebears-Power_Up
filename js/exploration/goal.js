@@ -85,3 +85,84 @@ class Goal_Pair {
         }
     }
 }
+
+// Switch
+const Switch_Cube_Relative_Positioning = [
+    new Vector(0.15, 0.025),
+    new Vector(0.60, 0.025),
+    new Vector(1.05, 0.025),
+    new Vector(0.375, -0.295),
+    new Vector(0.825, -0.295)
+];
+var switch_id_list = [];
+class Switch_Component extends Goal {
+    constructor (position, draw_priority, allience) {
+        super(position, draw_priority, allience, 
+                [
+                    new Collision_Box(new Vector(1.5, 0.5),
+                        new Vector(0.0, 0.0), [])
+                ]);
+        this.cube_count = 0;
+        switch_id_list.push(this.id);
+    }
+    get_cube_count () {
+        return this.cube_count;
+    }
+    add_cube (cube) {
+        var cube_relative_position = this.get_next_cube_offset();
+        cube.set_absolute_position(this.position.add(cube_relative_position));
+        cube.physics_state.freeze();
+        cube.set_ghost();
+        cube.draw_priority = 1;
+        this.cube_count++;
+    }
+    get_next_cube_offset () {
+        if(this.get_cube_count() <= 4){
+            return Switch_Cube_Relative_Positioning[this.get_cube_count()];
+        } else {
+            return new Vector(0.60, -0.295 - (0.32 * (this.get_cube_count() - 4)));
+        }
+    }
+}
+
+// Scale
+const SCALE_SCORING_BOX_SIZE = new Vector(1.5, 5.0);
+class Scale_Component extends Goal {
+    constructor (position, draw_priority, allience) {
+        super(position, draw_priority, allience, 
+            [
+                // Bottom
+                new Collision_Box(new Vector(1.5, 0.15),
+                    new Vector(0.0, 0.35), [-1]),
+                // Left
+                new Collision_Box(new Vector(0.1, 0.35),
+                    new Vector(0.0, 0.0), [-1]),
+                // Right
+                new Collision_Box(new Vector(0.1, 0.35),
+                    new Vector(1.4, 0.0), [-1])
+            ]);
+
+        this.scoring_box = new Collision_Box(SCALE_SCORING_BOX_SIZE,
+            new Vector(0.0, 0.5 - SCALE_SCORING_BOX_SIZE.y), [],
+            this.position);
+    }
+    update_position () {
+        this.scoring_box.set_parent_position(this.position);
+    }
+    get_cube_count () {
+        var cube_count = 0;
+        for(var i = 0; i < power_cube_id_list.length; ++i){
+            // For each power cube
+            var cube = exploration.scene.get_renderable_from_id(power_cube_id_list[i]);
+            if(!cube){
+                continue;
+            }
+            for(var j = 0; j < cube.physics_state.collision_boxes.length; ++j){
+                if(this.scoring_box.intersects(cube.physics_state.collision_boxes[j])){
+                    cube_count++;
+                }
+            }
+        }
+        return cube_count;
+    }
+}
