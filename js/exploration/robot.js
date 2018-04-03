@@ -16,7 +16,7 @@ class Robot extends Actor{
         this.facing = Direction.right;
         this.allience = allience;
         this.pickup_timer = new Timeline();
-        this.pickup_wait = 1.0;
+        this.pickup_wait = 5;
     }
     turn_right () {
         this.facing = Direction.right;
@@ -58,6 +58,10 @@ class Robot extends Actor{
     has_cube () {return this.cube != null;}
     launch () {
         if(this.has_cube()){
+            if(this.pickup_timer.get_elapsed_time() < this.pickup_wait / 2){
+                // If half-wait time has not elapsed
+                return;
+            }
             this.cube.set_absolute_position(robot.position.add(new Vector(0.25, -0.5)));
             this.cube.show();
             this.cube.set_freeze(false);
@@ -75,6 +79,7 @@ class Robot extends Actor{
             exploration.scene.add_renderable(this.cube);
             exploration.map.add_actor(this.cube);
             this.cube = null;
+            this.pickup_timer.reset();
             
             var flipped = this.animation.horizontal_flip;
             this.set_animation(this.no_cube_animation);
@@ -86,6 +91,10 @@ class Robot extends Actor{
     place () {
         if(this.has_cube()){
             // If the robot has a cube
+            if(this.pickup_timer.get_elapsed_time() < this.pickup_wait / 2){
+                // If half-wait time has not elapsed
+                return;
+            }
             for(var i = 0; i < switch_id_list.length; ++i){
                 // For each switch
                 var sw = exploration.scene.get_renderable_from_id(switch_id_list[i]);
@@ -101,6 +110,7 @@ class Robot extends Actor{
                     sw.add_cube(this.cube);
                     exploration.scene.add_renderable(this.cube);
                     this.cube = null;
+                    this.pickup_timer.reset();
                     var flipped = this.animation.horizontal_flip;
                     this.set_animation(this.no_cube_animation);
                     this.animation.set_flip(flipped);

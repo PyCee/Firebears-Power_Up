@@ -13,7 +13,6 @@ var Spinny = {
 Spinny.robot.set_pickup_wait(3.0);
 
 function spinny_ai () {
-    console.log(Spinny.robot.physics_state.acceleration.str());
     var move_speed = Spinny.speed * Spinny.robot.physics_state.mass;
 
     if(Spinny.timer.get_elapsed_time() > Spinny.curr_spin_duration){
