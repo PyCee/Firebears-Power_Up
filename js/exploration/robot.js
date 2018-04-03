@@ -15,6 +15,7 @@ class Robot extends Actor{
         this.cube = null;
         this.facing = Direction.right;
         this.allience = allience;
+        this.pickup_wait = new Timeline();
     }
     turn_right () {
         this.facing = Direction.right;
@@ -26,6 +27,9 @@ class Robot extends Actor{
     }
     pickup () {
         if(this.cube != null){
+            return;
+        }
+        if(this.pickup_wait.get_elapsed_time() < 1.0){
             return;
         }
         for(var i = 0; i < aquisition_id_list.length; ++i){
@@ -41,6 +45,7 @@ class Robot extends Actor{
                     this.animation.set_flip(flipped);
                     this.cube.set_ghost();
                     this.cube.hide();
+                    this.pickup_wait.reset();
                     break;
                 }
             }
