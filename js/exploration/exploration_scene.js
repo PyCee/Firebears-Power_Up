@@ -1,9 +1,11 @@
 var physics_time_accum = 0;
 
-var team_number = new World_Text(new Vector(0.0, 0.0), 0.175, "2846", "#000000");
+var team_number = new World_Text(new Vector(0.0, 0.0), 0.175, "2846", "#ffffff");
 function set_team_number (number_text) {
 	team_number.set_text(number_text);
 }
+
+const ARCADE = true;
 
 var exploration = {
     	// The scene that will be updated for each map
@@ -11,7 +13,9 @@ var exploration = {
 		physics_time_accum = 0;
 	}, null,
 	function(delta_s){
-		check_gamepad_input();
+		if(ARCADE){
+			check_gamepad_input();
+		}
 		// Update all actors
 		for(var i = 0; i < exploration.map.actors.length; ++i){
 			exploration.map.actors[i].ai_update(delta_s);
@@ -94,70 +98,76 @@ exploration.scene.user_input.add_keyboard_event("p", "press", function(){
 	end_tutorial();
 });
 
-// Makeshift event response for arcade controls
-var Gamepad_Index = -1;
-function get_gamepad () {
-	if(Gamepad_Index == -1){
-		return null;
-	} else {
-		return navigator.getGamepads()[Gamepad_Index];
+if(ARCADE){
+	// Makeshift event response for arcade controls
+	var Gamepad_Index = -1;
+	if(navigator.getGamepads().length){
+		Gamepad_Index = 0;
 	}
-}
-class Gamepad_Button {
-	constructor (index, fun) {
-		this.index = index;
-		this.fun = fun;
-		this.pressed = false;
+	function get_gamepad () {
+		if(Gamepad_Index == -1){
+			return null;
+		} else {
+			return navigator.getGamepads()[Gamepad_Index];
+		}
 	}
-}
-Gamepad_Buttons = [
-	new Gamepad_Button(0, function(){robot.pickup();}),
-	new Gamepad_Button(1, function(){robot.launch();}),
-	new Gamepad_Button(2, function(){robot.place();})
-];
-window.addEventListener("gamepadconnected", function(event) {
-	Gamepad_Index = event.gamepad.index;
-	console.log("Connected gamepad: " + get_gamepad().id);
-});
-window.addEventListener("gamepaddisconnected", function(event) {
-	console.log("disconnected gamepad");
-});
-function check_gamepad_input () {
-	if(get_gamepad() != null){
-		for(var i = 0; i < get_gamepad().buttons.length; ++i){
-			// Add_Temp_Debug_String("b" + i + ": " + get_gamepad().buttons[i].pressed);
-			for(var j = 0; j < Gamepad_Buttons.length; ++j){
-				if(i == Gamepad_Buttons[j].index){
-					if(get_gamepad().buttons[i].pressed != Gamepad_Buttons[j].pressed){
-						Gamepad_Buttons[j].pressed = !Gamepad_Buttons[j].pressed;
-						if(Gamepad_Buttons[j].pressed){
-							Gamepad_Buttons[j].fun();
+	class Gamepad_Button {
+		constructor (index, fun) {
+			this.index = index;
+			this.fun = fun;
+			this.pressed = false;
+		}
+	}
+	Gamepad_Buttons = [
+		new Gamepad_Button(7, function(){robot.pickup();}),
+		new Gamepad_Button(0, function(){robot.launch();}),
+		new Gamepad_Button(2, function(){robot.place();}),
+		new Gamepad_Button(4, function(){location.reload();})
+	];
+	window.addEventListener("gamepadconnected", function(event) {
+		Gamepad_Index = event.gamepad.index;
+		console.log("Connected gamepad: " + get_gamepad().id);
+	});
+	window.addEventListener("gamepaddisconnected", function(event) {
+		console.log("disconnected gamepad");
+	});
+	function check_gamepad_input () {
+		if(get_gamepad() != null){
+			for(var i = 0; i < get_gamepad().buttons.length; ++i){
+				// Add_Temp_Debug_String("b" + i + ": " + get_gamepad().buttons[i].pressed);
+				for(var j = 0; j < Gamepad_Buttons.length; ++j){
+					if(i == Gamepad_Buttons[j].index){
+						if(get_gamepad().buttons[i].pressed != Gamepad_Buttons[j].pressed){
+							Gamepad_Buttons[j].pressed = !Gamepad_Buttons[j].pressed;
+							if(Gamepad_Buttons[j].pressed){
+								Gamepad_Buttons[j].fun();
+							}
 						}
 					}
 				}
 			}
-		}
-		for(var i = 0; i < get_gamepad().axes.length; ++i){
-			// Add_Temp_Debug_String("a" + i + ": " + get_gamepad().axes[i].valueOf());
+			for(var i = 0; i < get_gamepad().axes.length; ++i){
+				// Add_Temp_Debug_String("a" + i + ": " + get_gamepad().axes[i].valueOf());
 
-			var val = get_gamepad().axes[i].valueOf();
-			if(val * val <= 0.3){
-				continue;
-			}
-			if(val < 0.0){
-				robot.turn_left();
-			} else {
-				robot.turn_right();
-			}
-			var move_speed = val * ROBOT_MOVE_SPEED * 0.03;
-			switch(i){
-			case 0:
-				robot.physics_state.impulse_momentum(new Vector(move_speed, 0.0));
-				break;
-			case 1:
-				break;
-			default:
-				break;
+				var val = get_gamepad().axes[i].valueOf();
+				if(val * val <= 0.3){
+					continue;
+				}
+				if(val < 0.0){
+					robot.turn_left();
+				} else {
+					robot.turn_right();
+				}
+				var move_speed = val * ROBOT_MOVE_SPEED * 0.03;
+				switch(i){
+				case 0:
+					robot.physics_state.impulse_momentum(new Vector(move_speed, 0.0));
+					break;
+				case 1:
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}

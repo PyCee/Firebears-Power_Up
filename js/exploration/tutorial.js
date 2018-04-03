@@ -28,14 +28,23 @@ var Tutorial = {
             Viewport.set_update(tutorial_viewport_update);
 
             Tutorial.score_timeline.reset();
-
             exploration.scene.add_renderable(team_number);
-            exploration.scene.add_renderable(Tutorial.move_text);
-            exploration.scene.add_renderable(Tutorial.pickup_text);
-            exploration.scene.add_renderable(Tutorial.pickup_text_2);
-            exploration.scene.add_renderable(Tutorial.place_text);
-            exploration.scene.add_renderable(Tutorial.place_text_2);
-            exploration.scene.add_renderable(Tutorial.launch_text);
+            if(ARCADE){
+                exploration.scene.add_renderable(Tutorial.arcade_move_image);
+                exploration.scene.add_renderable(Tutorial.arcade_pickup_image);
+                exploration.scene.add_renderable(Tutorial.arcade_pickup_example);
+                exploration.scene.add_renderable(Tutorial.arcade_place_image);
+                exploration.scene.add_renderable(Tutorial.arcade_place_example);
+                exploration.scene.add_renderable(Tutorial.arcade_launch_image);
+                exploration.scene.add_renderable(Tutorial.arcade_launch_example);
+            } else {
+                exploration.scene.add_renderable(Tutorial.move_text);
+                exploration.scene.add_renderable(Tutorial.pickup_text);
+                exploration.scene.add_renderable(Tutorial.pickup_text_2);
+                exploration.scene.add_renderable(Tutorial.place_text);
+                exploration.scene.add_renderable(Tutorial.place_text_2);
+                exploration.scene.add_renderable(Tutorial.launch_text);
+            }
             exploration.scene.add_renderable(Tutorial.score_text);
             exploration.scene.add_renderable(Tutorial.score_text_2);
             exploration.scene.add_renderable(Tutorial.score_text_3);
@@ -43,6 +52,12 @@ var Tutorial = {
             exploration.scene.add_renderable(Tutorial.portal.cube);
             Tutorial.cube_stack_1.add_cubes_to_scene();
             Tutorial.cube_stack_2.add_cubes_to_scene();
+
+            for(var i = 0; i < TUTORIAL_WIDTH; ++i){
+                var arrow = new Renderable(new Vector(i, TUTORIAL_HEIGHT - (0.5 - 0.1)),
+                    new Vector(0.3, 0.3), new Animation("arrow", Sprite.arrow), 6);
+                exploration.scene.add_renderable(arrow);
+            }
         }),
     score_timeline: new Timeline(),
     ground: new Actor(new Vector(0.0, TUTORIAL_HEIGHT - 0.5),
@@ -66,6 +81,16 @@ var Tutorial = {
             new Collision_Box(new Vector(0.4, TUTORIAL_HEIGHT - (TUTORIAL_HEIGHT - (0.5 + 2.5))), 
                 new Vector(0.0, 0.0), [-1])
         ]),
+    portal: new Portal(new Vector(9.7, TUTORIAL_HEIGHT - (0.5 + 1.2)), 2),
+    cube_stack_1: new Cube_Stack(new Vector(11, TUTORIAL_HEIGHT - (0.5 + 0.96)), 2),
+    switch: new Goal_Pair(new Vector(14.5, TUTORIAL_HEIGHT - (0.5 + 0.5)), 3, GOAL_COMPONENT.TYPE.SWITCH),
+    cube_stack_2: new Cube_Stack(new Vector(19, TUTORIAL_HEIGHT - (0.5 + 0.96)), 2),
+    scale: new Goal_Pair(new Vector(21.5, TUTORIAL_HEIGHT - (0.5 + 2.5)), 8, GOAL_COMPONENT.TYPE.SCALE),
+    exit: new Actor(new Vector(36.5, TUTORIAL_HEIGHT - (0.5 + 0.3)), new Vector(0.1, 0.3),
+        new Animation("exit", Sprite.red), 1, function(){}, -1, [
+            new Collision_Box(new Vector(0.1, 0.3), new Vector(0.0, 0.0),
+                [])
+        ]),
     move_text: new World_Text(new Vector(3.0, TUTORIAL_HEIGHT - (0.5 + 1.9)), 0.2,
         "The A key moves left, D moves right",
         "#000000"),
@@ -75,20 +100,15 @@ var Tutorial = {
     pickup_text_2: new World_Text(new Vector(9.0, TUTORIAL_HEIGHT - (0.5 + 1.65)), 0.2,
         "from a Portal or Cube Stack",
         "#000000"),
-    portal: new Portal(new Vector(9.7, TUTORIAL_HEIGHT - (0.5 + 1.2)), 2),
-    cube_stack_1: new Cube_Stack(new Vector(11, TUTORIAL_HEIGHT - (0.5 + 0.96)), 2),
     place_text: new World_Text(new Vector(14.0, TUTORIAL_HEIGHT - (0.5 + 1.9)), 0.2,
         "Press Q to place a cube on a Switch",
         "#000000"),
     place_text_2: new World_Text(new Vector(14.0, TUTORIAL_HEIGHT - (0.5 + 1.65)), 0.2,
         "(You put cubes on the blue goals)",
         "#000000"),
-    switch: new Goal_Pair(new Vector(14.5, TUTORIAL_HEIGHT - (0.5 + 0.5)), 3, GOAL_COMPONENT.TYPE.SWITCH),
-    cube_stack_2: new Cube_Stack(new Vector(19, TUTORIAL_HEIGHT - (0.5 + 0.96)), 2),
     launch_text: new World_Text(new Vector(20.5, TUTORIAL_HEIGHT - (0.5 + 1.9)), 0.2,
         "Press E to chuck a cube onto the Scale",
         "#000000"),
-    scale: new Goal_Pair(new Vector(21.5, TUTORIAL_HEIGHT - (0.5 + 2.5)), 8, GOAL_COMPONENT.TYPE.SCALE),
     score_text: new World_Text(new Vector(26, TUTORIAL_HEIGHT - (0.5 + 1.9)), 0.2,
         "You score 1 point/sec for each goal",
         "#000000"),
@@ -99,13 +119,22 @@ var Tutorial = {
         "You don't gain points from the right-most goal",
         "#000000"),
     exit_text: new World_Text(new Vector(32, TUTORIAL_HEIGHT - (0.5 + 1.65)), 0.2,
-        "Enter the green square to start the match",
+        "Pass the red line to start the match",
         "#000000"),
-    exit: new Actor(new Vector(35, TUTORIAL_HEIGHT - (0.5 + 1.0)), new Vector(3.0, 1.0),
-        new Animation("exit", Sprite.green), 1, function(){}, -1, [
-            new Collision_Box(new Vector(3.0, 1.0), new Vector(0.0, 0.0),
-                [])
-        ])
+    arcade_move_image: new Renderable(new Vector(3.0, TUTORIAL_HEIGHT - (0.5 + 3.9)),
+        new Vector(3, 2), new Animation("Tutorial Move image", Sprite.arcade_move), 2),
+    arcade_pickup_image: new Renderable(new Vector(9.0, TUTORIAL_HEIGHT - (0.5 + 4.4)),
+        new Vector(3, 2), new Animation("Tutorial Pickup image", Sprite.arcade_pickup), 2),
+    arcade_pickup_example: new Renderable(new Vector(9.0, TUTORIAL_HEIGHT - (0.5 + 3.1)),
+        new Vector(3, 1.5), new Animation("Tutorial Pickup Example", Sprite.arcade_pickup_example), 2),
+    arcade_place_image: new Renderable(new Vector(14.0, TUTORIAL_HEIGHT - (0.5 + 4.4)),
+        new Vector(3, 2), new Animation("Tutorial Place image", Sprite.arcade_place), 4),
+    arcade_place_example: new Renderable(new Vector(14.0, TUTORIAL_HEIGHT - (0.5 + 2.6)),
+        new Vector(4, 1), new Animation("Tutorial Pickup Example", Sprite.arcade_place_example), 2),
+    arcade_launch_image: new Renderable(new Vector(18.0, TUTORIAL_HEIGHT - (0.5 + 4.4)),
+        new Vector(3, 2), new Animation("Tutorial Launch image", Sprite.arcade_launch), 2),
+    arcade_launch_example: new Renderable(new Vector(22.0, TUTORIAL_HEIGHT - (0.5 + 4.475)),
+        new Vector(2.0, 1.5), new Animation("Tutorial Pickup Example", Sprite.arcade_launch_example), 2),
 };
 function end_tutorial () {
     if(Tutorial.active){
