@@ -5,7 +5,7 @@ function set_team_number (number_text) {
 	team_number.set_text(number_text);
 }
 
-const ARCADE = true;
+const ARCADE = false;
 
 var exploration = {
     	// The scene that will be updated for each map
