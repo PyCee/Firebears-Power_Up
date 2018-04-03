@@ -15,7 +15,8 @@ class Robot extends Actor{
         this.cube = null;
         this.facing = Direction.right;
         this.allience = allience;
-        this.pickup_wait = new Timeline();
+        this.pickup_timer = new Timeline();
+        this.pickup_wait = 1.0;
     }
     turn_right () {
         this.facing = Direction.right;
@@ -25,11 +26,14 @@ class Robot extends Actor{
         this.facing = Direction.left;
         this.animation.set_flip(true);
     }
+    set_pickup_wait (wait) {
+        this.pickup_wait = wait;
+    }
     pickup () {
         if(this.cube != null){
             return;
         }
-        if(this.pickup_wait.get_elapsed_time() < 1.0){
+        if(this.pickup_timer.get_elapsed_time() < this.pickup_wait){
             return;
         }
         for(var i = 0; i < aquisition_id_list.length; ++i){
@@ -45,7 +49,7 @@ class Robot extends Actor{
                     this.animation.set_flip(flipped);
                     this.cube.set_ghost();
                     this.cube.hide();
-                    this.pickup_wait.reset();
+                    this.pickup_timer.reset();
                     break;
                 }
             }

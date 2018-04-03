@@ -1,6 +1,6 @@
 var physics_time_accum = 0;
 
-var team_number = new World_Text(new Vector(0.0, 0.0), 0.175, "2846", "#ffffff");
+var team_number = new World_Text(new Vector(0.0, 0.0), 0.19, "2846", "#ffffff");
 function set_team_number (number_text) {
 	team_number.set_text(number_text);
 }
