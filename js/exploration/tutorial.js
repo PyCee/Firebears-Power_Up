@@ -53,7 +53,7 @@ var Tutorial = {
             Tutorial.cube_stack_1.add_cubes_to_scene();
             Tutorial.cube_stack_2.add_cubes_to_scene();
 
-            for(var i = 0; i < TUTORIAL_WIDTH; ++i){
+            for(var i = 0; i < TUTORIAL_WIDTH; i+=3){
                 var arrow = new Renderable(new Vector(i, TUTORIAL_HEIGHT - (0.5 - 0.1)),
                     new Vector(0.3, 0.3), new Animation("arrow", Sprite.arrow), 6);
                 exploration.scene.add_renderable(arrow);
