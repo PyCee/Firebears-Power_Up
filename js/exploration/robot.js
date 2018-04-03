@@ -16,7 +16,7 @@ class Robot extends Actor{
         this.facing = Direction.right;
         this.allience = allience;
         this.pickup_timer = new Timeline();
-        this.pickup_wait = 5;
+        this.pickup_wait = 0.5;
     }
     turn_right () {
         this.facing = Direction.right;
