@@ -95,7 +95,7 @@ var Tutorial = {
         "The A key moves left, D moves right",
         "#000000"),
     pickup_text: new World_Text(new Vector(9.0, TUTORIAL_HEIGHT - (0.5 + 1.9)), 0.2,
-        "The T key will pick up a cube",
+        "The Spacebar will pick up a cube",
         "#000000"),
     pickup_text_2: new World_Text(new Vector(9.0, TUTORIAL_HEIGHT - (0.5 + 1.65)), 0.2,
         "from a Portal or Cube Stack",

@@ -88,7 +88,7 @@ exploration.scene.user_input.add_keyboard_event("d", "release", function(){
 exploration.scene.user_input.add_keyboard_event("q", "press", function(){
 	robot.place();
 });
-exploration.scene.user_input.add_keyboard_event("t", "press", function(){
+exploration.scene.user_input.add_keyboard_event(" ", "press", function(){
 	robot.pickup();
 });
 exploration.scene.user_input.add_keyboard_event("e", "press", function(){
