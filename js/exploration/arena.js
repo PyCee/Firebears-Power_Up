@@ -46,11 +46,11 @@ var Arena = {
         Arena.scoring.blue = 0;
         Arena.scoring.red = 0;
     }),
-    blue_score: new Screen_Text(new Vector(0.05, 0.1), 2.0, "0", "#0000ff"),
-    red_score: new Screen_Text(new Vector(0.75, 0.1), 2.0, "0", "#ff0000"),
+    blue_score: new Screen_Text(new Vector(0.01, 0.1), 2.0, "0", "#0000ff"),
+    red_score: new Screen_Text(new Vector(0.79, 0.1), 2.0, "0", "#ff0000"),
     countdown: 60,
     countdown_text: new Screen_Text(new Vector(0.4, 0.1), 2.5, "60", "#000000"),
-    win_text: new Screen_Text(new Vector(0.15, 0.1), 2.0, "Noone Wins!", "#222222"),
+    win_text: new Screen_Text(new Vector(0.20, 0.1), 2.0, "Noone Wins!", "#222222"),
     ground: new Actor(new Vector(0.0, ARENA_HEIGHT - 0.5),
         new Vector(ARENA_WIDTH, 0.5), new Animation("Still Ground", Sprite.black),
         1, function(){}, -1,
