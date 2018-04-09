@@ -48,9 +48,9 @@ var Arena = {
     }),
     blue_score: new Screen_Text(new Vector(0.05, 0.1), 2.0, "0", "#0000ff"),
     red_score: new Screen_Text(new Vector(0.75, 0.1), 2.0, "0", "#ff0000"),
-    countdown: 60,
-    countdown_text: new Screen_Text(new Vector(0.4, 0.1), 2.5, "60", "#000000"),
-    win_text: new Screen_Text(new Vector(0.15, 0.5), 2.0, "Noone Wins!", "#000000"),
+    countdown: 10,
+    countdown_text: new Screen_Text(new Vector(0.4, 0.1), 2.5, "10", "#000000"),
+    win_text: new Screen_Text(new Vector(0.15, 0.1), 2.0, "Noone Wins!", "#222222"),
     ground: new Actor(new Vector(0.0, ARENA_HEIGHT - 0.5),
         new Vector(ARENA_WIDTH, 0.5), new Animation("Still Ground", Sprite.black),
         1, function(){}, -1,
@@ -152,7 +152,9 @@ Arena.score_timeline.add_event(1.0, function(){
             Arena.win_text.set_position(Arena.win_text.position.add(new Vector(0.2, 0.0)));
             Arena.win_text.set_text("Tie!");
         }
-        exploration.scene.add_renderable(Arena.win_text);
+	exploration.scene.add_renderable(Arena.win_text);
+	//Arena.countdown_text.hide();
+	exploration.scene.remove_renderable(Arena.countdown_text);
     }
 });
 
