@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(0, 0, 0);
+    background-color: #111111;
     margin: 0px;
 }
 main {
@@ -7,6 +7,9 @@ main {
 }
 canvas {
     background-color: hsla(135, 50%, 20%, 1.0);
+}
+p {
+    font-size: 18px;
 }
 #temp_debug_string {
     display: inline;
